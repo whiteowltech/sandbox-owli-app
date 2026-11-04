@@ -1,0 +1,322 @@
+{
+  "common": {
+    "back": "Back",
+    "soon": "This screen arrives in the next step.",
+    "language": "Language",
+    "kcal": "kcal",
+    "cancel": "Cancel"
+  },
+  "owli": {
+    "name": "Owli",
+    "mood": {
+      "energetic": "Owli, full of energy",
+      "neutral": "Owli, calm",
+      "tired": "Owli, tired",
+      "satisfied": "Owli, satisfied"
+    }
+  },
+  "onboarding": {
+    "hello": "Hi, I’m Owli. I help you eat for your goal without counting by hand. What should I call you?",
+    "nameLabel": "Your name",
+    "namePlaceholder": "Your name",
+    "nameOptional": "Optional. You can leave it blank.",
+    "start": "Start",
+    "startNamed": "Hi Owli, I’m {{name}}",
+    "minutes": "3 steps. Under a minute.",
+    "stepOf": "{{n}} of 3",
+    "backTo": {
+      "body": "Back to hello",
+      "goal": "Back to your body",
+      "diet": "Back to your goal",
+      "ready": "Back to your diet"
+    },
+    "titles": {
+      "body": "Tell me about you. This is how I work out what you burn each day.",
+      "bodyNamed": "{{name}}, tell me about you. This is how I work out what you burn each day.",
+      "goal": "What are you after? I’ll tell you how much to eat and by when, no wild promises.",
+      "diet": "How do you eat? Every suggestion will respect your diet."
+    },
+    "sex": "Biological sex",
+    "sexes": {
+      "female": "Female",
+      "male": "Male"
+    },
+    "age": "Age",
+    "years": "{{n}} yrs",
+    "height": "Height",
+    "weight": "Weight",
+    "less": "Less {{what}}",
+    "more": "More {{what}}",
+    "units": "Units",
+    "unitsMetric": "kg · cm",
+    "unitsImperial": "lb · ft",
+    "activity": "Activity",
+    "activities": {
+      "sedentary": {
+        "short": "None",
+        "long": "Sedentary: little or no exercise"
+      },
+      "light": {
+        "short": "Low",
+        "long": "Light: 1 to 3 days a week"
+      },
+      "moderate": {
+        "short": "Mid",
+        "long": "Moderate: 3 to 5 days a week"
+      },
+      "active": {
+        "short": "High",
+        "long": "Active: 6 to 7 days a week"
+      },
+      "very_active": {
+        "short": "Max",
+        "long": "Very active: physical job or two sessions"
+      }
+    },
+    "burnLabel": "You burn per day, approx.",
+    "burnPending": "Pick your biological sex and I’ll work it out.",
+    "errors": {
+      "sexRequired": "Pick one: the daily energy formula needs it.",
+      "underage": "Owli is for people 18 and over.",
+      "wrongDirectionCut": "To lose fat, your goal weight needs to be below your current weight.",
+      "wrongDirectionBulk": "To build muscle, your goal weight needs to be above your current weight.",
+      "dietRequired": "Pick a diet to continue."
+    },
+    "goals": {
+      "cut": {
+        "label": "Lose fat",
+        "hint": "Deficit, protecting muscle"
+      },
+      "maintain": {
+        "label": "Maintain",
+        "hint": "Eat what you burn"
+      },
+      "bulk": {
+        "label": "Build muscle",
+        "hint": "Controlled surplus"
+      },
+      "recomp": {
+        "label": "Recomposition",
+        "hint": "Fat down, muscle up"
+      }
+    },
+    "targetWeight": "Goal weight",
+    "pace": "Pace",
+    "paces": {
+      "slow": "Easy",
+      "steady": "Steady",
+      "fast": "Demanding"
+    },
+    "rate": "{{sign}}{{weight}} per week",
+    "eta": "You’d get there around {{date}}.",
+    "etaHonest": "It’s an estimate: bodies don’t change in a straight line.",
+    "etaTooSlow": "At your current energy use, the safe minimum leaves very little room. Adding activity will help more than eating less.",
+    "lowBmi": "That weight is below the healthy range for your height.",
+    "targetLabel": "Your daily target",
+    "explain": {
+      "cut": "{{tdee}} burned − {{delta}} deficit",
+      "bulk": "{{tdee}} burned + {{delta}} surplus",
+      "maintain": "Same as what you burn: {{tdee}}",
+      "recomp": "{{tdee}} burned − {{delta}} (light deficit)"
+    },
+    "clamped": "I won’t go below {{min}} kcal: that’s the safe minimum.",
+    "provisional": "The goal adjustment is provisional and still needs review by a professional.",
+    "diets": {
+      "omnivore": {
+        "label": "Balanced omnivore",
+        "hint": "A bit of everything"
+      },
+      "vegetarian": {
+        "label": "Vegetarian",
+        "hint": "No meat or fish"
+      },
+      "pescetarian": {
+        "label": "Pescatarian",
+        "hint": "Vegetarian plus fish and seafood"
+      },
+      "vegan": {
+        "label": "Vegan",
+        "hint": "Nothing of animal origin"
+      },
+      "keto": {
+        "label": "Keto",
+        "hint": "Under 25 g net carbs"
+      },
+      "paleo": {
+        "label": "Paleo",
+        "hint": "No grains, legumes, dairy or sugar"
+      },
+      "carnivore": {
+        "label": "Strict carnivore",
+        "hint": "Animal foods only"
+      }
+    },
+    "restrLabel": "Anything you avoid for health?",
+    "restrHint": "Pick both or neither.",
+    "restrictions": {
+      "gluten_free": "Gluten-free",
+      "lactose_free": "Lactose-free"
+    },
+    "voice": {
+      "omnivore": "Noted. No exclusions, just balance.",
+      "vegetarian": "Noted. Eggs and dairy will be your allies.",
+      "pescetarian": "Noted. The sea will be your big protein source.",
+      "vegan": "Noted. We’ll hit your protein with plants only.",
+      "keto": "Perfect. I’ll watch every gram of carbs for you.",
+      "paleo": "Noted. Real food, the old way.",
+      "carnivore": "Good. From today, we hunt."
+    },
+    "next": "Next",
+    "done": "Done",
+    "ready": "All set. You can start your day.",
+    "readyNamed": "All set, {{name}}. You can start your day.",
+    "gift": "Your first 15 AI analyses are on us. Logging by hand is always free.",
+    "later": "The rest (meals per day, reminders, Apple Health) I’ll ask when it matters.",
+    "goToDay": "Go to my day"
+  },
+  "today": {
+    "title": "Today",
+    "hello": "Hi, {{name}}",
+    "weekAria": "See your week",
+    "accountAria": "See your account",
+    "left": "You have left",
+    "over": "You went over by",
+    "eatenOf": "{{eaten}} of {{target}} kcal",
+    "macros": {
+      "protein": "Protein",
+      "carbs": "Carbs",
+      "fat": "Fat",
+      "netCarbs": "Net carbs"
+    },
+    "dayTitle": "Your day",
+    "retry": "Retry",
+    "errors": {
+      "offline": "No connection. Check your internet and try again.",
+      "unknown": "Something went wrong loading your day."
+    },
+    "empty": {
+      "title": "Nothing logged yet today",
+      "body": "Log your first meal and I’ll tell you what’s left."
+    },
+    "remove": "Remove {{name}}",
+    "addFood": "Log by hand",
+    "add": {
+      "title": "Log by hand",
+      "free": "Free. Uses no analyses.",
+      "searchLabel": "Search for a food",
+      "placeholder": "Search for a food",
+      "per100": "{{kcal}} kcal/100 g",
+      "noResults": "Not found. Try another name.",
+      "change": "Change",
+      "grams": "Grams",
+      "less": "Fewer grams",
+      "more": "More grams",
+      "portion": "{{kcal}} kcal · {{protein}} g protein",
+      "saving": "Logging…",
+      "confirm": "Add to my day",
+      "conflict": {
+        "gluten_free": "Contains gluten. You can still log it; Owli won’t suggest it.",
+        "lactose_free": "Contains lactose. You can still log it; Owli won’t suggest it."
+      },
+      "offDiet": {
+        "carnivore": "Not animal-based: outside the carnivore diet.",
+        "vegan": "Animal-based: outside the vegan diet.",
+        "vegetarian": "Has meat or fish: outside the vegetarian diet.",
+        "pescetarian": "Has meat: outside the pescatarian diet.",
+        "paleo": "Outside the paleo diet (grain, legume, dairy or sugar)."
+      }
+    },
+    "mood": {
+      "neutral": "The day is under way.",
+      "energetic": "You’re on a good pace.",
+      "tired": "Protein is falling well behind:",
+      "satisfied": "Day closed: calories and protein on target."
+    },
+    "hint": {
+      "protein": "{{g}} g of protein to go.",
+      "over": "Tomorrow balances it out: one day doesn’t define anything.",
+      "proteinShort": "{{g}} g to go."
+    },
+    "credits": "{{n}} analyses",
+    "creditsAria": "You have {{n}} AI analyses left",
+    "photoBtn": "Photo",
+    "voiceBtn": "Voice",
+    "voiceAria": "Say what you ate",
+    "photo": {
+      "analyzing": "Analyzing your photo…",
+      "analyzingHint": "It usually takes 2 or 3 seconds.",
+      "errorTitle": "We couldn’t analyze the photo",
+      "errorBody": "No credit was used. Check your connection and try again.",
+      "retry": "Try again",
+      "noFoodTitle": "We didn’t see food in the photo",
+      "noFoodBody": "No credit was used. Try another photo with the plate in clear view.",
+      "ok": "Got it",
+      "noCreditsTitle": "No analyses left today",
+      "noCreditsBody": "You get another one tomorrow. Meanwhile, logging by hand is always free.",
+      "manualInstead": "Log by hand (free)",
+      "reviewTitle": "Check your meal",
+      "reviewHint": "Adjust the grams if something looks off: the photo is an estimate.",
+      "removed": "You removed {{name}}.",
+      "undo": "Undo",
+      "remove": "Remove {{name}}",
+      "notFound": "Not in our database yet: pick a similar one or remove it.",
+      "pickFood": "Choose the food",
+      "check": "Check this one: I’m not sure.",
+      "less": "Less {{name}}",
+      "more": "More {{name}}",
+      "leftAfter": "If you save it, {{kcal}} kcal left.",
+      "overAfter": "If you save it, you go {{kcal}} kcal over.",
+      "unresolved": "{{n}} without a food chosen: it won’t be saved.",
+      "save": "Save ({{n}})",
+      "discarded": "The photo isn’t stored: it’s discarded after the analysis."
+    },
+    "voice": {
+      "recordingTitle": "Listening…",
+      "recordingHint": "Tell me what you ate and how much. For example: \"two beef empanadas and a salad\".",
+      "stop": "Done",
+      "analyzing": "Understanding what you said…",
+      "analyzingHint": "It usually takes 2 or 3 seconds.",
+      "errorTitle": "We couldn't analyze the audio",
+      "noFoodTitle": "We didn't hear any food",
+      "noFoodBody": "No credit was used. Try again, naming each food and the amount.",
+      "reviewHint": "Adjust the grams if something looks off: it's an estimate from what you said.",
+      "heard": "I heard: \"{{text}}\"",
+      "discarded": "The audio isn't stored: it's discarded after the analysis.",
+      "micErrorTitle": "We can't access the microphone",
+      "micErrorBody": "Allow it in your browser or phone permissions. Meanwhile, you can log by hand or take a photo."
+    },
+    "closing": {
+      "cta": "See what to eat now",
+      "titleNext": "For your next meal",
+      "titleLast": "To close your day",
+      "need": "You need {{kcal}} kcal, {{p}} g of protein, {{c}} g of carbs and {{f}} g of fat.",
+      "needNet": "You need {{kcal}} kcal, {{p}} g of protein, {{c}} g of net carbs and {{f}} g of fat.",
+      "split": "That's what's left today, split across your {{n}} remaining meals.",
+      "exact": "Right on target",
+      "portion": "{{g}} g of {{name}}",
+      "totals": "{{kcal}} kcal · {{p}} g of protein",
+      "log": "Log",
+      "logAria": "Log {{name}}",
+      "more": "See {{n}} more options",
+      "free": "Everything fits your diet. Logging a dish is free.",
+      "closedTitle": "You've covered your day",
+      "closedBody": "You reached today's calories. Tomorrow we start fresh.",
+      "noneTitle": "I couldn't find dishes that fit",
+      "noneBody": "With what you need and your diet, no dish on the list works. You can log what you eat by hand.",
+      "error": "We couldn't load the suggestions. Check your connection.",
+      "logError": "The dish couldn't be logged. Try again: what was already logged won't repeat."
+    }
+  },
+  "week": {
+    "title": "Your week"
+  },
+  "account": {
+    "title": "Your account",
+    "language": "Language",
+    "disclaimer": "Owli is not a substitute for medical or nutritional advice. If you have a health condition, talk to a professional before changing how you eat."
+  },
+  "dev": {
+    "demoProfile": "Use a test profile",
+    "resetProfile": "Delete the profile and start over"
+  }
+}

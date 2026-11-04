@@ -1,0 +1,95 @@
+.dishes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dish {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--owli-pino);
+}
+.dish-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+
+  h3 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 700;
+  }
+}
+// Cierra lo que falta (±5 % kcal, ±5 g de proteína). Texto, no solo color.
+.exact {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--owli-liquen);
+}
+.portions {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--owli-pluma);
+}
+.dish-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.totals {
+  font-size: 14px;
+  color: var(--owli-texto-terciario);
+}
+.log {
+  height: 44px;
+  padding: 0 18px;
+  border: 2px solid var(--owli-ojo);
+  border-radius: 14px;
+  background: transparent;
+  color: var(--owli-ojo);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+.empty-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+}
+.skeletons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.skeleton {
+  height: 104px;
+  border-radius: 16px;
+  background: var(--owli-pino);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
+.hint.center {
+  text-align: center;
+}

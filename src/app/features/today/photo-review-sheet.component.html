@@ -1,0 +1,194 @@
+<section
+  class="sheet"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="photo-title"
+  [attr.aria-busy]="analysis.phase() === 'analyzing' || analysis.phase() === 'recording'"
+>
+  @switch (analysis.phase()) {
+    @case ('recording') {
+      <header>
+        <div>
+          <h2 id="photo-title">{{ 'today.voice.recordingTitle' | transloco }}</h2>
+          <p class="hint">{{ 'today.voice.recordingHint' | transloco }}</p>
+        </div>
+        <button type="button" class="close" (click)="close()">{{ 'common.cancel' | transloco }}</button>
+      </header>
+      <div class="listening" aria-hidden="true"><span></span><span></span><span></span></div>
+      @if (analysis.capture() === 'device' && speech.text()) {
+        <!-- Lo que el dispositivo va entendiendo, en vivo. -->
+        <p class="heard live" aria-live="polite">«{{ speech.text() }}»</p>
+      }
+      <button type="button" class="cta" (click)="analysis.finishRecording()">
+        {{ 'today.voice.stop' | transloco }}
+      </button>
+    }
+
+    @case ('micError') {
+      <header>
+        <h2 id="photo-title">{{ 'today.voice.micErrorTitle' | transloco }}</h2>
+      </header>
+      <p class="hint" role="status">{{ 'today.voice.micErrorBody' | transloco }}</p>
+      <button type="button" class="cta" (click)="analysis.close(); manual.emit()">
+        {{ 'today.photo.manualInstead' | transloco }}
+      </button>
+      <button type="button" class="close" (click)="close()">{{ 'common.cancel' | transloco }}</button>
+    }
+
+    @case ('analyzing') {
+      <header>
+        <div>
+          <h2 id="photo-title">{{ k('analyzing') | transloco }}</h2>
+          <p class="hint">{{ k('analyzingHint') | transloco }}</p>
+        </div>
+      </header>
+      <div class="skeletons" aria-hidden="true">
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+      </div>
+    }
+
+    @case ('error') {
+      <header>
+        <h2 id="photo-title">{{ k('errorTitle') | transloco }}</h2>
+      </header>
+      <p class="err" role="alert">{{ 'today.photo.errorBody' | transloco }}</p>
+      <button type="button" class="cta" (click)="analysis.retry()">{{ 'today.photo.retry' | transloco }}</button>
+      <button type="button" class="close" (click)="close()">{{ 'common.cancel' | transloco }}</button>
+    }
+
+    @case ('noFood') {
+      <header>
+        <h2 id="photo-title">{{ k('noFoodTitle') | transloco }}</h2>
+      </header>
+      <p class="hint" role="status">{{ k('noFoodBody') | transloco }}</p>
+      <button type="button" class="cta" (click)="close()">{{ 'today.photo.ok' | transloco }}</button>
+    }
+
+    @case ('noCredits') {
+      <header>
+        <h2 id="photo-title">{{ 'today.photo.noCreditsTitle' | transloco }}</h2>
+      </header>
+      <p class="hint" role="status">{{ 'today.photo.noCreditsBody' | transloco }}</p>
+      <button type="button" class="cta" (click)="analysis.close(); manual.emit()">
+        {{ 'today.photo.manualInstead' | transloco }}
+      </button>
+      <button type="button" class="close" (click)="close()">{{ 'common.cancel' | transloco }}</button>
+    }
+
+    @default {
+      <header>
+        <div>
+          <h2 id="photo-title">{{ 'today.photo.reviewTitle' | transloco }}</h2>
+          <p class="hint">{{ k('reviewHint') | transloco }}</p>
+        </div>
+        <button type="button" class="close" (click)="close()">{{ 'common.cancel' | transloco }}</button>
+      </header>
+      @if (analysis.transcript()) {
+        <p class="heard">{{ 'today.voice.heard' | transloco: { text: analysis.transcript() } }}</p>
+      }
+
+      @if (picking() === null) {
+        <ul class="results">
+          @for (d of analysis.draft(); track d.key) {
+            <li class="review-item" [class.attention]="d.needsReview && !d.removed">
+              @if (d.removed) {
+                <span class="name muted">{{ 'today.photo.removed' | transloco: { name: name(d) } }}</span>
+                <button type="button" class="link" (click)="analysis.undo(d.key)">
+                  {{ 'today.photo.undo' | transloco }}
+                </button>
+              } @else {
+                <div class="review-head">
+                  <span class="name">{{ name(d) }}</span>
+                  <button
+                    type="button"
+                    class="icon"
+                    [attr.aria-label]="'today.photo.remove' | transloco: { name: name(d) }"
+                    (click)="analysis.remove(d.key)"
+                  >
+                    ×
+                  </button>
+                </div>
+                @if (!d.food) {
+                  <p class="warn">{{ 'today.photo.notFound' | transloco }}</p>
+                  <button type="button" class="pick" (click)="startPick(d)">
+                    {{ 'today.photo.pickFood' | transloco }}
+                  </button>
+                } @else {
+                  @if (d.needsReview) {
+                    <p class="warn">{{ 'today.photo.check' | transloco }}</p>
+                  }
+                  <div class="grams small">
+                    <button
+                      type="button"
+                      class="step"
+                      [attr.aria-label]="'today.photo.less' | transloco: { name: name(d) }"
+                      (click)="analysis.nudge(d.key, 0.9)"
+                    >
+                      −
+                    </button>
+                    <span class="num value">{{ d.grams }} g</span>
+                    <button
+                      type="button"
+                      class="step"
+                      [attr.aria-label]="'today.photo.more' | transloco: { name: name(d) }"
+                      (click)="analysis.nudge(d.key, 1.1)"
+                    >
+                      +
+                    </button>
+                    <span class="num per">{{ kcal(d) }} {{ 'common.kcal' | transloco }}</span>
+                  </div>
+                }
+              }
+            </li>
+          }
+        </ul>
+
+        <p class="portion num" aria-live="polite">
+          @if (leftAfter() >= 0) {
+            {{ 'today.photo.leftAfter' | transloco: { kcal: leftAfter() } }}
+          } @else {
+            {{ 'today.photo.overAfter' | transloco: { kcal: -leftAfter() } }}
+          }
+        </p>
+        @if (unresolved() > 0) {
+          <p class="hint">{{ 'today.photo.unresolved' | transloco: { n: unresolved() } }}</p>
+        }
+        <button
+          type="button"
+          class="cta"
+          [disabled]="analysis.phase() === 'saving' || analysis.savable().length === 0"
+          (click)="save()"
+        >
+          {{
+            (analysis.phase() === 'saving' ? 'today.add.saving' : 'today.photo.save')
+              | transloco: { n: analysis.savable().length }
+          }}
+        </button>
+        <p class="hint center">{{ k('discarded') | transloco }}</p>
+      } @else {
+        <label class="sr-only" for="pick-search">{{ 'today.add.searchLabel' | transloco }}</label>
+        <input
+          id="pick-search"
+          class="search"
+          type="search"
+          autocomplete="off"
+          [value]="query()"
+          (input)="search($any($event.target).value)"
+        />
+        <ul class="results">
+          @for (f of results(); track f.id) {
+            <li>
+              <button type="button" class="result" (click)="pick(f)">
+                <span class="name">{{ foodName(f) }}</span>
+                <span class="per num">{{ 'today.add.per100' | transloco: { kcal: round(f.per100g.kcal) } }}</span>
+              </button>
+            </li>
+          }
+        </ul>
+        <button type="button" class="close" (click)="picking.set(null)">{{ 'common.back' | transloco }}</button>
+      }
+    }
+  }
+</section>

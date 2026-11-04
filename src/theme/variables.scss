@@ -1,0 +1,63 @@
+// Tema de Owli: "bosque de noche". Modo oscuro siempre, acentos cálidos.
+// Los tokens --owli-* son la fuente de verdad; las variables --ion-* los traducen
+// para que los componentes de Ionic hereden la paleta.
+// Se repiten en :root.ios y :root.md porque la paleta oscura de Ionic usa esos
+// selectores (más específicos que :root) y si no, pisaría estos colores.
+
+:root,
+:root.ios,
+:root.md {
+  // Paleta
+  --owli-pino: #1b2a26; // fondo
+  --owli-corteza: #26372f; // superficies (tarjetas, campos)
+  --owli-corteza-alta: #34483f; // superficie elevada / selección
+  --owli-rama: #3b4f45; // la rama: barra de calorías
+  --owli-borde: #4a5e54;
+  --owli-ojo: #f2b33d; // ámbar: acción principal y proteína
+  --owli-liquen: #86b39f; // éxito, carbohidratos
+  --owli-pluma: #d6c2a1; // texto secundario
+  --owli-luna: #eee8da; // texto principal
+  --owli-luna-azul: #9db4d9; // grasa
+  --owli-texto-terciario: #a9b5ad;
+
+  // Tipografía
+  --owli-font: 'Atkinson Hyperlegible Next', system-ui, sans-serif;
+
+  // Movimiento: rápido, nunca lento (regla de CLAUDE.md)
+  --owli-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --owli-dur-rapida: 150ms;
+  --owli-dur: 220ms;
+
+  // Ionic
+  --ion-font-family: var(--owli-font);
+  --ion-background-color: var(--owli-pino);
+  --ion-background-color-rgb: 27, 42, 38;
+  --ion-text-color: var(--owli-luna);
+  --ion-text-color-rgb: 238, 232, 218;
+  --ion-card-background: var(--owli-corteza);
+  --ion-item-background: var(--owli-corteza);
+  --ion-toolbar-background: var(--owli-pino);
+  --ion-border-color: var(--owli-borde);
+  --ion-placeholder-color: #8a9a91;
+
+  --ion-color-primary: #f2b33d;
+  --ion-color-primary-rgb: 242, 179, 61;
+  --ion-color-primary-contrast: #1b2a26;
+  --ion-color-primary-contrast-rgb: 27, 42, 38;
+  --ion-color-primary-shade: #d59e36;
+  --ion-color-primary-tint: #f3bb50;
+
+  --ion-color-success: #86b39f;
+  --ion-color-success-rgb: 134, 179, 159;
+  --ion-color-success-contrast: #1b2a26;
+  --ion-color-success-contrast-rgb: 27, 42, 38;
+  --ion-color-success-shade: #769e8c;
+  --ion-color-success-tint: #92bba9;
+
+  --ion-color-medium: #a9b5ad;
+  --ion-color-medium-rgb: 169, 181, 173;
+  --ion-color-medium-contrast: #1b2a26;
+  --ion-color-medium-contrast-rgb: 27, 42, 38;
+  --ion-color-medium-shade: #959f98;
+  --ion-color-medium-tint: #b2bcb5;
+}

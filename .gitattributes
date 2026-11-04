@@ -1,0 +1,6 @@
+# Fin de línea LF en el repo y en la copia de trabajo (Prettier usa LF).
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.webp binary
+*.woff2 binary

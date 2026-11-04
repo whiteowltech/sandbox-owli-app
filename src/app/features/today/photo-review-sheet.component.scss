@@ -1,0 +1,121 @@
+.review-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  background: var(--owli-pino);
+
+  // Baja confianza o sin coincidencia: se resalta para revisar (solo ayuda visual).
+  &.attention {
+    border-color: rgba(242, 179, 61, 0.55);
+  }
+}
+.review-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.muted {
+  color: var(--owli-texto-terciario);
+  font-weight: 400;
+}
+.icon {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  background: transparent;
+  color: var(--owli-texto-terciario);
+  font: inherit;
+  font-size: 22px;
+}
+.pick {
+  height: 44px;
+  border: 2px dashed var(--owli-borde);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--owli-luna);
+  font: inherit;
+  font-weight: 600;
+}
+.grams.small {
+  justify-content: flex-start;
+  gap: 8px;
+
+  .step {
+    width: 44px;
+    height: 44px;
+  }
+  .value {
+    min-width: 72px;
+    font-size: 18px;
+  }
+  .per {
+    margin-left: auto;
+  }
+}
+.skeletons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.skeleton {
+  height: 56px;
+  border-radius: 14px;
+  background: var(--owli-pino);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+.hint.center {
+  text-align: center;
+  font-size: 13px;
+}
+// Grabando: tres barras que laten (el usuario sabe que el micrófono está abierto).
+.listening {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  height: 72px;
+
+  span {
+    width: 10px;
+    height: 24px;
+    border-radius: 5px;
+    background: var(--owli-ojo);
+    animation: listen 0.9s ease-in-out infinite;
+  }
+  span:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  span:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+}
+@keyframes listen {
+  50% {
+    transform: scaleY(2);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .listening span {
+    animation: none;
+  }
+}
+// Lo que se entendió del audio, para ver de dónde salió cada alimento.
+.heard {
+  margin: 0;
+  padding: 10px 14px;
+  border-left: 3px solid var(--owli-borde);
+  color: var(--owli-pluma);
+  font-style: italic;
+}
+.heard.live {
+  font-style: normal;
+  color: var(--owli-luna);
+}

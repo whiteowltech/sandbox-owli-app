@@ -1,0 +1,322 @@
+{
+  "common": {
+    "back": "Volver",
+    "soon": "Esta pantalla llega en el próximo paso.",
+    "language": "Idioma",
+    "kcal": "kcal",
+    "cancel": "Cancelar"
+  },
+  "owli": {
+    "name": "Owli",
+    "mood": {
+      "energetic": "Owli, con energía",
+      "neutral": "Owli, tranquilo",
+      "tired": "Owli, cansado",
+      "satisfied": "Owli, satisfecho"
+    }
+  },
+  "onboarding": {
+    "hello": "Hola, soy Owli. Te ayudo a comer según tu objetivo sin contar a mano. ¿Cómo te llamo?",
+    "nameLabel": "Tu nombre",
+    "namePlaceholder": "Tu nombre",
+    "nameOptional": "Opcional. Puedes dejarlo vacío.",
+    "start": "Empezar",
+    "startNamed": "Hola, Owli. Soy {{name}}",
+    "minutes": "Son 3 pasos. Menos de un minuto.",
+    "stepOf": "{{n}} de 3",
+    "backTo": {
+      "body": "Volver al saludo",
+      "goal": "Volver a tu cuerpo",
+      "diet": "Volver al objetivo",
+      "ready": "Volver a la dieta"
+    },
+    "titles": {
+      "body": "Cuéntame de ti. Con esto calculo cuánto gastas al día.",
+      "bodyNamed": "{{name}}, cuéntame de ti. Con esto calculo cuánto gastas al día.",
+      "goal": "¿Qué buscas? Te digo cuánto comer y para cuándo, sin promesas raras.",
+      "diet": "¿Cómo comes? Cada sugerencia va a respetar tu dieta."
+    },
+    "sex": "Sexo biológico",
+    "sexes": {
+      "female": "Mujer",
+      "male": "Hombre"
+    },
+    "age": "Edad",
+    "years": "{{n}} años",
+    "height": "Altura",
+    "weight": "Peso",
+    "less": "Menos {{what}}",
+    "more": "Más {{what}}",
+    "units": "Unidades",
+    "unitsMetric": "kg · cm",
+    "unitsImperial": "lb · ft",
+    "activity": "Actividad",
+    "activities": {
+      "sedentary": {
+        "short": "Nada",
+        "long": "Sedentario: poco o nada de ejercicio"
+      },
+      "light": {
+        "short": "Poca",
+        "long": "Ligero: 1 a 3 días por semana"
+      },
+      "moderate": {
+        "short": "Media",
+        "long": "Moderado: 3 a 5 días por semana"
+      },
+      "active": {
+        "short": "Alta",
+        "long": "Activo: 6 a 7 días por semana"
+      },
+      "very_active": {
+        "short": "Máx.",
+        "long": "Muy activo: trabajo físico o doble sesión"
+      }
+    },
+    "burnLabel": "Gastas al día, aprox.",
+    "burnPending": "Elige tu sexo biológico y lo calculo.",
+    "errors": {
+      "sexRequired": "Elige una opción: la fórmula del gasto diario la necesita.",
+      "underage": "Owli es para mayores de 18 años.",
+      "wrongDirectionCut": "Para perder grasa, el peso meta tiene que ser menor que el actual.",
+      "wrongDirectionBulk": "Para ganar músculo, el peso meta tiene que ser mayor que el actual.",
+      "dietRequired": "Elige una dieta para seguir."
+    },
+    "goals": {
+      "cut": {
+        "label": "Perder grasa",
+        "hint": "Déficit cuidando el músculo"
+      },
+      "maintain": {
+        "label": "Mantener",
+        "hint": "Comer lo que gastas"
+      },
+      "bulk": {
+        "label": "Ganar músculo",
+        "hint": "Superávit controlado"
+      },
+      "recomp": {
+        "label": "Recomposición",
+        "hint": "Grasa abajo, músculo arriba"
+      }
+    },
+    "targetWeight": "Peso meta",
+    "pace": "Ritmo",
+    "paces": {
+      "slow": "Tranquilo",
+      "steady": "Constante",
+      "fast": "Exigente"
+    },
+    "rate": "{{sign}}{{weight}} por semana",
+    "eta": "Llegarías alrededor del {{date}}.",
+    "etaHonest": "Es una estimación: el cuerpo no cambia en línea recta.",
+    "etaTooSlow": "Con tu gasto actual, el mínimo seguro deja muy poco margen. Sumar actividad te ayudará más que comer menos.",
+    "lowBmi": "Ese peso queda por debajo del rango saludable para tu altura.",
+    "targetLabel": "Tu objetivo diario",
+    "explain": {
+      "cut": "{{tdee}} de gasto − {{delta}} de déficit",
+      "bulk": "{{tdee}} de gasto + {{delta}} de superávit",
+      "maintain": "Igual a tu gasto diario: {{tdee}}",
+      "recomp": "{{tdee}} de gasto − {{delta}} (déficit leve)"
+    },
+    "clamped": "No bajo de {{min}} kcal: es el mínimo seguro.",
+    "provisional": "El ajuste por objetivo es provisional y falta validarlo con un profesional.",
+    "diets": {
+      "omnivore": {
+        "label": "Omnívoro balanceado",
+        "hint": "De todo, con equilibrio"
+      },
+      "vegetarian": {
+        "label": "Vegetariano",
+        "hint": "Sin carne ni pescado"
+      },
+      "pescetarian": {
+        "label": "Pescetariano",
+        "hint": "Vegetariano con pescado y marisco"
+      },
+      "vegan": {
+        "label": "Vegano",
+        "hint": "Nada de origen animal"
+      },
+      "keto": {
+        "label": "Keto",
+        "hint": "Menos de 25 g de carbohidratos netos"
+      },
+      "paleo": {
+        "label": "Paleo",
+        "hint": "Sin cereales, legumbres, lácteos ni azúcar"
+      },
+      "carnivore": {
+        "label": "Carnívoro estricto",
+        "hint": "Solo alimentos de origen animal"
+      }
+    },
+    "restrLabel": "Además, ¿evitas algo por salud?",
+    "restrHint": "Puedes elegir las dos o ninguna.",
+    "restrictions": {
+      "gluten_free": "Sin gluten",
+      "lactose_free": "Sin lactosa"
+    },
+    "voice": {
+      "omnivore": "Anotado. Sin exclusiones, con equilibrio.",
+      "vegetarian": "Anotado. Huevos y lácteos serán tus aliados.",
+      "pescetarian": "Anotado. El mar va a ser tu gran fuente de proteína.",
+      "vegan": "Anotado. Llegamos a tu proteína solo con plantas.",
+      "keto": "Perfecto. Vigilo cada gramo de carbos por ti.",
+      "paleo": "Anotado. Comida real, como antes.",
+      "carnivore": "Bien. Desde hoy salimos de cacería."
+    },
+    "next": "Seguir",
+    "done": "Listo",
+    "ready": "Listo. Ya puedes empezar tu día.",
+    "readyNamed": "Listo, {{name}}. Ya puedes empezar tu día.",
+    "gift": "Tus primeros 15 análisis con IA son de regalo. Anotar a mano es gratis siempre.",
+    "later": "Lo demás (comidas al día, recordatorios, Apple Health) te lo pregunto cuando haga falta.",
+    "goToDay": "Ir a mi día"
+  },
+  "today": {
+    "title": "Hoy",
+    "hello": "Hola, {{name}}",
+    "weekAria": "Ver tu semana",
+    "accountAria": "Ver tu cuenta",
+    "left": "Te quedan",
+    "over": "Te pasaste",
+    "eatenOf": "{{eaten}} de {{target}} kcal",
+    "macros": {
+      "protein": "Proteína",
+      "carbs": "Carbos",
+      "fat": "Grasa",
+      "netCarbs": "Carbos netos"
+    },
+    "dayTitle": "Tu día",
+    "retry": "Reintentar",
+    "errors": {
+      "offline": "Sin conexión. Revisa tu internet e inténtalo de nuevo.",
+      "unknown": "Algo falló al cargar tu día."
+    },
+    "empty": {
+      "title": "Todavía no anotaste nada hoy",
+      "body": "Anota tu primera comida y te digo cuánto te queda."
+    },
+    "remove": "Quitar {{name}}",
+    "addFood": "Anotar a mano",
+    "add": {
+      "title": "Anotar a mano",
+      "free": "Gratis. No usa análisis.",
+      "searchLabel": "Buscar un alimento",
+      "placeholder": "Busca un alimento",
+      "per100": "{{kcal}} kcal/100 g",
+      "noResults": "No lo encontramos. Prueba con otro nombre.",
+      "change": "Cambiar",
+      "grams": "Gramos",
+      "less": "Menos gramos",
+      "more": "Más gramos",
+      "portion": "{{kcal}} kcal · {{protein}} g de proteína",
+      "saving": "Anotando…",
+      "confirm": "Agregar al día",
+      "conflict": {
+        "gluten_free": "Contiene gluten. Puedes anotarlo igual; Owli no te lo sugerirá.",
+        "lactose_free": "Contiene lactosa. Puedes anotarlo igual; Owli no te lo sugerirá."
+      },
+      "offDiet": {
+        "carnivore": "No es de origen animal: no entra en la dieta carnívora.",
+        "vegan": "Es de origen animal: no entra en la dieta vegana.",
+        "vegetarian": "Tiene carne o pescado: no entra en la dieta vegetariana.",
+        "pescetarian": "Tiene carne: no entra en la dieta pescetariana.",
+        "paleo": "No entra en la dieta paleo (cereal, legumbre, lácteo o azúcar)."
+      }
+    },
+    "mood": {
+      "neutral": "El día sigue en marcha.",
+      "energetic": "Vas a buen ritmo.",
+      "tired": "La proteína va muy atrás:",
+      "satisfied": "Día cerrado: calorías y proteína en rango."
+    },
+    "hint": {
+      "protein": "Te faltan {{g}} g de proteína.",
+      "over": "Mañana se equilibra: un día no define nada.",
+      "proteinShort": "te faltan {{g}} g."
+    },
+    "credits": "{{n}} análisis",
+    "creditsAria": "Te quedan {{n}} análisis con IA",
+    "photoBtn": "Foto",
+    "voiceBtn": "Voz",
+    "voiceAria": "Contar lo que comiste",
+    "photo": {
+      "analyzing": "Analizando tu foto…",
+      "analyzingHint": "Suele tardar 2 o 3 segundos.",
+      "errorTitle": "No pudimos analizar la foto",
+      "errorBody": "No se usó ningún crédito. Revisa tu conexión e inténtalo de nuevo.",
+      "retry": "Reintentar",
+      "noFoodTitle": "No vimos comida en la foto",
+      "noFoodBody": "No se usó ningún crédito. Prueba con otra foto, con el plato bien a la vista.",
+      "ok": "Entendido",
+      "noCreditsTitle": "No te quedan análisis por hoy",
+      "noCreditsBody": "Mañana tienes otro. Mientras, anotar a mano es gratis siempre.",
+      "manualInstead": "Anotar a mano (gratis)",
+      "reviewTitle": "Revisa tu comida",
+      "reviewHint": "Ajusta los gramos si algo no cuadra: la foto es una estimación.",
+      "removed": "Quitaste {{name}}.",
+      "undo": "Deshacer",
+      "remove": "Quitar {{name}}",
+      "notFound": "Todavía no está en la base: elige uno parecido o quítalo.",
+      "pickFood": "Elegir el alimento",
+      "check": "Revisa este: no estoy seguro.",
+      "less": "Menos {{name}}",
+      "more": "Más {{name}}",
+      "leftAfter": "Si lo guardas, te quedan {{kcal}} kcal.",
+      "overAfter": "Si lo guardas, te pasas {{kcal}} kcal.",
+      "unresolved": "{{n}} sin alimento elegido: no se guardará.",
+      "save": "Guardar ({{n}})",
+      "discarded": "La foto no se guarda: se descarta después del análisis."
+    },
+    "voice": {
+      "recordingTitle": "Te escucho…",
+      "recordingHint": "Cuéntame qué comiste y cuánto. Por ejemplo: «dos empanadas de carne y una ensalada».",
+      "stop": "Listo",
+      "analyzing": "Entendiendo lo que dijiste…",
+      "analyzingHint": "Suele tardar 2 o 3 segundos.",
+      "errorTitle": "No pudimos analizar el audio",
+      "noFoodTitle": "No escuchamos ninguna comida",
+      "noFoodBody": "No se usó ningún crédito. Prueba de nuevo, nombrando cada comida y la cantidad.",
+      "reviewHint": "Ajusta los gramos si algo no cuadra: es una estimación a partir de lo que dijiste.",
+      "heard": "Escuché: «{{text}}»",
+      "discarded": "El audio no se guarda: se descarta después del análisis.",
+      "micErrorTitle": "No tenemos acceso al micrófono",
+      "micErrorBody": "Habilítalo en los permisos del navegador o del teléfono. Mientras, puedes anotar a mano o sacar una foto."
+    },
+    "closing": {
+      "cta": "Ver qué comer ahora",
+      "titleNext": "Para tu próxima comida",
+      "titleLast": "Para cerrar el día",
+      "need": "Te faltan {{kcal}} kcal, {{p}} g de proteína, {{c}} g de carbos y {{f}} g de grasa.",
+      "needNet": "Te faltan {{kcal}} kcal, {{p}} g de proteína, {{c}} g de carbos netos y {{f}} g de grasa.",
+      "split": "Es lo que falta del día repartido entre tus {{n}} comidas que quedan.",
+      "exact": "Cierra justo",
+      "portion": "{{g}} g de {{name}}",
+      "totals": "{{kcal}} kcal · {{p}} g de proteína",
+      "log": "Anotar",
+      "logAria": "Anotar {{name}}",
+      "more": "Ver {{n}} opciones más",
+      "free": "Todo respeta tu dieta. Anotar un plato es gratis.",
+      "closedTitle": "Ya cubriste tu día",
+      "closedBody": "Llegaste a tus calorías de hoy. Mañana arrancamos de nuevo.",
+      "noneTitle": "No encontré platos que encajen",
+      "noneBody": "Con lo que falta y tu dieta, ningún plato de la lista cuadra. Puedes anotar a mano lo que comas.",
+      "error": "No pudimos cargar las sugerencias. Revisa tu conexión.",
+      "logError": "No se pudo anotar el plato. Inténtalo de nuevo: lo ya anotado no se repite."
+    }
+  },
+  "week": {
+    "title": "Tu semana"
+  },
+  "account": {
+    "title": "Tu cuenta",
+    "language": "Idioma",
+    "disclaimer": "Owli no sustituye el consejo médico ni nutricional. Si tienes una condición de salud, consulta a un profesional antes de cambiar tu alimentación."
+  },
+  "dev": {
+    "demoProfile": "Usar un perfil de prueba",
+    "resetProfile": "Borrar el perfil y volver a empezar"
+  }
+}

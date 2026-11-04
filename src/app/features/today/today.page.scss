@@ -1,0 +1,307 @@
+.screen {
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: calc(env(safe-area-inset-top) + 16px) 24px calc(env(safe-area-inset-bottom) + 20px);
+}
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.date {
+  margin: 0;
+  font-size: 15px;
+  color: var(--owli-pluma);
+}
+.hello {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+}
+.actions {
+  display: flex;
+  gap: 8px;
+
+  a {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--owli-corteza);
+    color: var(--owli-luna);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+}
+.status {
+  margin-top: 16px;
+
+  .label {
+    margin: 0;
+    font-size: 15px;
+    color: var(--owli-pluma);
+  }
+  .of {
+    margin: 2px 0 0;
+    font-size: 14px;
+    color: var(--owli-texto-terciario);
+  }
+}
+.big {
+  margin: 0;
+  font-size: 44px;
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+
+  span {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--owli-pluma);
+  }
+}
+.branch {
+  position: relative;
+  flex-shrink: 0;
+  width: 390px;
+  height: 140px;
+  margin: -8px -24px 0;
+
+  svg {
+    position: absolute;
+    inset: 0;
+  }
+  .walker {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: transform 600ms var(--owli-ease);
+  }
+}
+.owli-says {
+  margin: 6px 0 0;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--owli-pluma);
+}
+// Qué comer ahora: enlace de texto para no competir con Foto, que es la acción principal.
+.closing-cta {
+  min-height: 44px;
+  margin-left: -2px;
+  padding: 0 2px;
+  border: 0;
+  background: transparent;
+  color: var(--owli-ojo);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.macros {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+
+  dt {
+    font-size: 14px;
+    color: var(--owli-pluma);
+  }
+  dd {
+    margin: 2px 0 0;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .of-target {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--owli-texto-terciario);
+  }
+  .bar {
+    height: 5px;
+    margin-top: 6px;
+    border-radius: 3px;
+    background: var(--owli-corteza-alta);
+    overflow: hidden;
+  }
+  .fill {
+    height: 100%;
+    border-radius: 3px;
+    transform-origin: left center;
+    transition: transform 400ms var(--owli-ease);
+  }
+  .protein {
+    background: var(--owli-ojo);
+  }
+  .carbs,
+  .netCarbs {
+    background: var(--owli-liquen);
+  }
+  .fat {
+    background: var(--owli-luna-azul);
+  }
+}
+.day {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  margin-top: 16px;
+
+  h2 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--owli-pluma);
+  }
+}
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 8px 8px 8px 14px;
+  border-radius: 12px;
+  background: #3a3322;
+  color: var(--owli-ojo);
+  font-size: 14px;
+
+  button {
+    height: 36px;
+    border: 0;
+    background: transparent;
+    color: var(--owli-ojo);
+    font: inherit;
+    font-weight: 700;
+  }
+}
+.empty {
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #22332d;
+  color: var(--owli-pluma);
+  font-size: 15px;
+
+  p {
+    margin: 0;
+  }
+  .empty-title {
+    color: var(--owli-luna);
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+}
+.entries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 0 4px 0 14px;
+  border-radius: 14px;
+  background: #22332d;
+}
+.entry-main {
+  flex-grow: 1;
+  min-width: 0;
+
+  p {
+    margin: 0;
+  }
+}
+.entry-name {
+  font-size: 16px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.entry-meta {
+  font-size: 13px;
+  color: var(--owli-texto-terciario);
+}
+.entry-kcal {
+  font-size: 15px;
+  color: var(--owli-pluma);
+}
+.remove {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--owli-texto-terciario);
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.credits {
+  width: auto !important;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap; // "16 análisis" en una línea
+}
+.log-actions {
+  flex-shrink: 0;
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+.secondary {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  border: 2px solid var(--owli-ojo);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--owli-ojo);
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cta {
+  flex-grow: 1;
+  cursor: pointer;
+  height: 60px;
+  border: 0;
+  border-radius: 20px;
+  background: var(--owli-ojo);
+  color: var(--owli-pino);
+  font: inherit;
+  font-size: 18px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  ion-icon {
+    font-size: 22px;
+  }
+}
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(12, 19, 17, 0.66);
+}
+.sheet-host {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}

@@ -1,0 +1,177 @@
+<ion-content [scrollY]="false">
+  <div class="screen">
+    <header class="top">
+      <div>
+        <p class="date">{{ dateLabel() }}</p>
+        @if (profile.greetingName()) {
+        <p class="hello">{{ 'today.hello' | transloco: { name: profile.greetingName() } }}</p>
+        }
+      </div>
+      <nav class="actions">
+        @if (analysis.wallet(); as w) {
+        <a
+          class="credits num"
+          routerLink="/account"
+          [attr.aria-label]="'today.creditsAria' | transloco: { n: w.total }"
+        >
+          {{ 'today.credits' | transloco: { n: w.total } }}
+        </a>
+        }
+        <a routerLink="/week" [attr.aria-label]="'today.weekAria' | transloco">
+          <ion-icon name="bar-chart-outline" aria-hidden="true" />
+        </a>
+        <a routerLink="/account" [attr.aria-label]="'today.accountAria' | transloco">
+          <ion-icon name="person-circle-outline" aria-hidden="true" />
+        </a>
+      </nav>
+    </header>
+
+    <section class="status" aria-live="polite">
+      @if (left() >= 0) {
+      <p class="label">{{ 'today.left' | transloco }}</p>
+      <p class="big num">{{ num(left()) }} <span>{{ 'common.kcal' | transloco }}</span></p>
+      } @else {
+      <p class="label">{{ 'today.over' | transloco }}</p>
+      <p class="big num">{{ num(-left()) }} <span>{{ 'common.kcal' | transloco }}</span></p>
+      }
+      <p class="of num">{{ 'today.eatenOf' | transloco: { eaten: num(eaten()), target: num(target()) } }}</p>
+      @if (diary.day()) {
+      <p class="owli-says">
+        {{ 'today.mood.' + mood() | transloco }} @if (hint(); as h) { {{ h.key | transloco: h.params }} }
+      </p>
+      @if (left() >= 100) {
+      <button type="button" class="closing-cta" (click)="openSuggestions()">
+        {{ 'today.closing.cta' | transloco }}
+      </button>
+      } }
+    </section>
+
+    <div class="branch" aria-hidden="true">
+      <svg viewBox="0 0 390 140" width="390" height="140">
+        <path d="M-10 116 Q195 84 400 110" fill="none" stroke="#3B4F45" stroke-width="12" stroke-linecap="round" />
+        <path
+          d="M-10 116 Q195 84 400 110"
+          pathLength="100"
+          fill="none"
+          stroke="#EEE8DA"
+          stroke-width="3.5"
+          stroke-linecap="round"
+          [attr.stroke-dasharray]="dash()"
+          transform="translate(0 -3)"
+        />
+        <path d="M318 100 C326 88 342 84 352 88 C346 100 332 104 318 100 Z" fill="#86B39F" />
+        <path d="M352 104 C362 96 376 96 384 102 C376 112 362 112 352 104 Z" fill="#6E9C87" />
+      </svg>
+      <owli-owl class="walker" [mood]="mood()" [size]="96" [decorative]="true" [style.transform]="owlPos()" />
+    </div>
+
+    <dl class="macros">
+      @for (m of macroRows(); track m.key) {
+      <div>
+        <dt>{{ 'today.macros.' + m.key | transloco }}</dt>
+        <dd class="num">{{ num(m.eaten) }}<span class="of-target"> / {{ num(m.target) }} g</span></dd>
+        <div class="bar" role="presentation">
+          <div class="fill" [class]="'fill ' + m.key" [style.transform]="'scaleX(' + m.ratio + ')'"></div>
+        </div>
+      </div>
+      }
+    </dl>
+
+    <section class="day">
+      <h2>{{ 'today.dayTitle' | transloco }}</h2>
+      @if (diary.error() && !sheetOpen()) {
+      <div class="banner" role="alert">
+        <span>{{ 'today.errors.' + diary.error() | transloco }}</span>
+        <button type="button" (click)="diary.load()">{{ 'today.retry' | transloco }}</button>
+      </div>
+      } @if (diary.entries().length === 0 && !diary.loading()) {
+      <div class="empty">
+        <p class="empty-title">{{ 'today.empty.title' | transloco }}</p>
+        <p>{{ 'today.empty.body' | transloco }}</p>
+      </div>
+      }
+      <ul class="entries">
+        @for (e of diary.entries(); track e.id) {
+        <li class="entry">
+          <div class="entry-main">
+            <p class="entry-name">{{ entryName(e) }}</p>
+            <p class="entry-meta num">{{ e.grams }} g · {{ time(e) }}</p>
+          </div>
+          <span class="entry-kcal num">{{ num(e.macros.kcal) }} {{ 'common.kcal' | transloco }}</span>
+          <button
+            type="button"
+            class="remove"
+            [attr.aria-label]="'today.remove' | transloco: { name: entryName(e) }"
+            (click)="diary.remove(e.id)"
+          >
+            <ion-icon name="close-outline" aria-hidden="true" />
+          </button>
+        </li>
+        }
+      </ul>
+    </section>
+
+    <div class="log-actions">
+      <!-- Cámara y micrófono a un toque desde que se abre la app (CLAUDE.md: ≤ 2 toques). -->
+      <label class="cta photo">
+        <input
+          #photoInput
+          class="sr-only"
+          type="file"
+          accept="image/*"
+          capture="environment"
+          (change)="onPhoto($any($event.target))"
+        />
+        <ion-icon name="camera-outline" aria-hidden="true" />
+        {{ 'today.photoBtn' | transloco }}
+      </label>
+      @if (analysis.voiceAvailable()) {
+      <button
+        type="button"
+        class="secondary"
+        [attr.aria-label]="'today.voiceAria' | transloco"
+        (click)="analysis.startRecording()"
+      >
+        <ion-icon name="mic-outline" aria-hidden="true" />
+      </button>
+      }
+      <button
+        type="button"
+        class="secondary"
+        [attr.aria-label]="'today.addFood' | transloco"
+        (click)="sheetOpen.set(true)"
+      >
+        <ion-icon name="search-outline" aria-hidden="true" />
+      </button>
+    </div>
+  </div>
+
+  @if (analysis.phase() !== 'idle') {
+  <div class="scrim" aria-hidden="true"></div>
+  <owli-photo-review-sheet
+    class="sheet-host"
+    [lang]="lang()"
+    [leftKcal]="left()"
+    (closed)="onPhotoClosed()"
+    (manual)="sheetOpen.set(true)"
+  />
+  } @if (suggestionsOpen()) {
+  <div class="scrim" (click)="suggestionsOpen.set(false)" aria-hidden="true"></div>
+  <owli-suggestions-sheet
+    class="sheet-host"
+    [lang]="lang()"
+    (closed)="suggestionsOpen.set(false)"
+    (manual)="suggestionsOpen.set(false); sheetOpen.set(true)"
+  />
+  } @if (sheetOpen() && profile.profile(); as p) {
+  <div class="scrim" (click)="sheetOpen.set(false)" aria-hidden="true"></div>
+  <owli-add-food-sheet
+    class="sheet-host"
+    [diet]="p.diet"
+    [restrictions]="p.restrictions"
+    [lang]="lang()"
+    (closed)="sheetOpen.set(false)"
+    (added)="onAdded()"
+  />
+  }
+</ion-content>

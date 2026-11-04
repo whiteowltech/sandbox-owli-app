@@ -1,0 +1,98 @@
+<section
+  class="sheet"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="closing-title"
+  [attr.aria-busy]="store.loading()"
+>
+  @let c = store.closing();
+  <header>
+    <div>
+      <h2 id="closing-title">
+        {{ (c && c.mealsLeft === 1 ? 'today.closing.titleLast' : 'today.closing.titleNext') | transloco }}
+      </h2>
+      @if (c && !c.closed) {
+        <p class="hint num">
+          {{
+            (c.netCarbs ? 'today.closing.needNet' : 'today.closing.need')
+              | transloco
+                : {
+                    kcal: round(c.need.kcal),
+                    p: round(c.need.proteinG),
+                    c: round(c.need.carbsG),
+                    f: round(c.need.fatG),
+                  }
+          }}
+          @if (c.mealsLeft > 1) {
+            {{ 'today.closing.split' | transloco: { n: c.mealsLeft } }}
+          }
+        </p>
+      }
+    </div>
+    <button type="button" class="close" (click)="closed.emit()">{{ 'common.cancel' | transloco }}</button>
+  </header>
+
+  @if (store.loading() && !c) {
+    <div class="skeletons" aria-hidden="true">
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+    </div>
+  } @else if (store.error() && !c) {
+    <p class="err" role="alert">{{ 'today.closing.error' | transloco }}</p>
+    <button type="button" class="cta" (click)="store.load()">{{ 'today.retry' | transloco }}</button>
+  } @else if (c?.closed) {
+    <p class="empty-title">{{ 'today.closing.closedTitle' | transloco }}</p>
+    <p class="hint">{{ 'today.closing.closedBody' | transloco }}</p>
+  } @else if (c && c.dishes.length === 0) {
+    <p class="empty-title">{{ 'today.closing.noneTitle' | transloco }}</p>
+    <p class="hint">{{ 'today.closing.noneBody' | transloco }}</p>
+    <button type="button" class="cta" (click)="manual.emit()">{{ 'today.addFood' | transloco }}</button>
+  } @else if (c) {
+    @if (store.error()) {
+      <p class="err" role="alert">{{ 'today.closing.logError' | transloco }}</p>
+    }
+    <ul class="dishes">
+      @for (d of dishes(); track d.id) {
+        <li class="dish">
+          <div class="dish-head">
+            <h3>{{ dishName(d) }}</h3>
+            @if (d.exact) {
+              <span class="exact">{{ 'today.closing.exact' | transloco }}</span>
+            }
+          </div>
+          <p class="portions">
+            @for (p of d.portions; track p.food.id; let last = $last) {
+              <span class="num">{{
+                'today.closing.portion' | transloco: { g: p.grams, name: portionName(p.food) }
+              }}</span>
+              @if (!last) {
+                +
+              }
+            }
+          </p>
+          <div class="dish-foot">
+            <span class="num totals">
+              {{ 'today.closing.totals' | transloco: { kcal: round(d.macros.kcal), p: round(d.macros.proteinG) } }}
+            </span>
+            <button
+              type="button"
+              class="log"
+              [disabled]="store.logging() !== null"
+              [attr.aria-label]="'today.closing.logAria' | transloco: { name: dishName(d) }"
+              (click)="log(d)"
+            >
+              {{ (store.logging() === d.id ? 'today.add.saving' : 'today.closing.log') | transloco }}
+            </button>
+          </div>
+        </li>
+      }
+    </ul>
+    @if (hidden() > 0) {
+      <button type="button" class="link" (click)="showAll.set(true)">
+        {{ 'today.closing.more' | transloco: { n: hidden() } }}
+      </button>
+    }
+    <p class="hint center">{{ 'today.closing.free' | transloco }}</p>
+  }
+</section>

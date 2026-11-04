@@ -1,0 +1,351 @@
+<!-- La pantalla no se desplaza entera: solo el contenido del medio, para que el botón principal esté siempre a la vista. -->
+<ion-content [scrollY]="false">
+  <div class="screen">
+    @switch (s.step()) {
+    <!-- Saludo -->
+    @case ('hello') {
+    <div class="seg langs" role="group" [attr.aria-label]="'common.language' | transloco">
+      @for (l of langs; track l) {
+      <button type="button" [attr.aria-pressed]="l === lang()" (click)="setLang(l)">{{ l.toUpperCase() }}</button>
+      }
+    </div>
+    <main class="hello">
+      <div class="hello-owl">
+        <svg aria-hidden="true" viewBox="0 0 390 200" width="390" height="200">
+          <path d="M-10 184 Q170 160 400 176" fill="none" stroke="#3B4F45" stroke-width="12" stroke-linecap="round" />
+          <path d="M300 164 C310 148 332 142 346 148 C338 164 318 170 300 164 Z" fill="#86B39F" />
+          <path d="M348 174 C362 162 380 162 392 170 C380 184 362 184 348 174 Z" fill="#6E9C87" />
+        </svg>
+        <owli-owl class="perched" mood="energetic" [size]="168" />
+      </div>
+      <p class="bubble">{{ 'onboarding.hello' | transloco }}</p>
+      <label class="sr-only" for="ob-name">{{ 'onboarding.nameLabel' | transloco }}</label>
+      <input
+        id="ob-name"
+        class="name-input"
+        type="text"
+        autocomplete="given-name"
+        enterkeyhint="next"
+        maxlength="40"
+        [placeholder]="'onboarding.namePlaceholder' | transloco"
+        [value]="s.name()"
+        (input)="s.setName($any($event.target).value)"
+        (keydown.enter)="next()"
+      />
+      <p class="hint right">{{ 'onboarding.nameOptional' | transloco }}</p>
+    </main>
+    <button type="button" class="cta" (click)="next()">
+      @if (s.greetingName()) { {{ 'onboarding.startNamed' | transloco: { name: s.greetingName() } }} } @else { {{
+      'onboarding.start' | transloco }} }
+    </button>
+    <p class="hint center">{{ 'onboarding.minutes' | transloco }}</p>
+    @if (devMode) {
+    <button type="button" class="link" (click)="useDemoProfile()">{{ 'dev.demoProfile' | transloco }}</button>
+    } }
+
+    <!-- Pasos 1 a 3 y resultado -->
+    @default {
+    <div class="top">
+      <button
+        type="button"
+        class="icon-btn"
+        [attr.aria-label]="'onboarding.backTo.' + s.step() | transloco"
+        (click)="s.back()"
+      >
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M15 5l-7 7 7 7" />
+        </svg>
+      </button>
+      @if (s.step() !== 'ready') {
+      <p class="step-of">{{ 'onboarding.stepOf' | transloco: { n: s.stepNumber() } }}</p>
+      }
+    </div>
+
+    @if (s.step() !== 'ready') {
+    <div class="branch" aria-hidden="true">
+      <svg viewBox="0 0 390 64" width="390" height="64">
+        <path d="M-10 56 Q195 46 400 54" fill="none" stroke="#3B4F45" stroke-width="8" stroke-linecap="round" />
+        @for (k of knots(); track k.x) {
+        <circle [attr.cx]="k.x" [attr.cy]="k.y" r="6" [class]="'knot ' + k.state" stroke="#1B2A26" stroke-width="2" />
+        }
+      </svg>
+      <owli-owl
+        class="walker"
+        mood="neutral"
+        [size]="52"
+        [decorative]="true"
+        [style.transform]="'translateX(' + owlX() + ')'"
+      />
+    </div>
+    }
+
+    <div class="scroll">
+      @switch (s.step()) {
+      <!-- 1. Tu cuerpo -->
+      @case ('body') {
+      <h1 class="bubble title">
+        @if (s.greetingName()) { {{ 'onboarding.titles.bodyNamed' | transloco: { name: s.greetingName() } }} } @else {
+        {{ 'onboarding.titles.body' | transloco }} }
+      </h1>
+      <div class="stack">
+        <div class="grid-2" role="group" [attr.aria-label]="'onboarding.sex' | transloco">
+          @for (x of sexes; track x) {
+          <button type="button" class="choice" [attr.aria-pressed]="s.sex() === x" (click)="s.setSex(x)">
+            {{ 'onboarding.sexes.' + x | transloco }}
+          </button>
+          }
+        </div>
+        @if (s.visibleErrors().includes('sexRequired')) {
+        <p class="err" role="alert">{{ 'onboarding.errors.sexRequired' | transloco }}</p>
+        }
+
+        <owli-stepper
+          labelId="ob-age"
+          [label]="'onboarding.age' | transloco"
+          [display]="'onboarding.years' | transloco: { n: s.ageYears() }"
+          [value]="s.ageYears()"
+          [min]="ranges.ageMin"
+          [max]="ranges.ageMax"
+          [decLabel]="'onboarding.less' | transloco: { what: ('onboarding.age' | transloco) }"
+          [incLabel]="'onboarding.more' | transloco: { what: ('onboarding.age' | transloco) }"
+          (changed)="s.setAge($event)"
+        />
+        @if (s.ageYears() < ranges.ageYears.min) {
+        <p class="err" role="alert">{{ 'onboarding.errors.underage' | transloco }}</p>
+        }
+        <owli-stepper
+          labelId="ob-height"
+          [label]="'onboarding.height' | transloco"
+          [display]="heightText()"
+          [value]="s.heightCm()"
+          [min]="ranges.heightMin"
+          [max]="ranges.heightMax"
+          [decLabel]="'onboarding.less' | transloco: { what: ('onboarding.height' | transloco) }"
+          [incLabel]="'onboarding.more' | transloco: { what: ('onboarding.height' | transloco) }"
+          (changed)="s.setHeight($event)"
+        />
+        <owli-stepper
+          labelId="ob-weight"
+          [label]="'onboarding.weight' | transloco"
+          [display]="weightText()"
+          [value]="s.weightKg()"
+          [min]="35"
+          [max]="250"
+          [step]="0.5"
+          [decLabel]="'onboarding.less' | transloco: { what: ('onboarding.weight' | transloco) }"
+          [incLabel]="'onboarding.more' | transloco: { what: ('onboarding.weight' | transloco) }"
+          (changed)="s.setWeight($event)"
+        />
+
+        <div class="units">
+          <span class="hint">{{ 'onboarding.units' | transloco }}</span>
+          <div class="seg" role="group" [attr.aria-label]="'onboarding.units' | transloco">
+            <button type="button" [attr.aria-pressed]="s.units() === 'metric'" (click)="s.setUnits('metric')">
+              {{ 'onboarding.unitsMetric' | transloco }}
+            </button>
+            <button type="button" [attr.aria-pressed]="s.units() === 'imperial'" (click)="s.setUnits('imperial')">
+              {{ 'onboarding.unitsImperial' | transloco }}
+            </button>
+          </div>
+        </div>
+
+        <div role="group" [attr.aria-label]="'onboarding.activity' | transloco">
+          <p class="field-label">
+            {{ 'onboarding.activity' | transloco }}:
+            <strong>{{ 'onboarding.activities.' + s.activity() + '.long' | transloco }}</strong>
+          </p>
+          <div class="grid-5">
+            @for (a of activities; track a; let i = $index) {
+            <button
+              type="button"
+              class="choice act"
+              [attr.aria-pressed]="s.activity() === a"
+              [attr.aria-label]="'onboarding.activities.' + a + '.long' | transloco"
+              (click)="s.setActivity(a)"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 16" width="24" height="16">
+                @for (j of [0, 1, 2, 3, 4]; track j) {
+                <rect
+                  [attr.x]="1 + j * 5"
+                  [attr.y]="14 - (j + 1) * 2.6"
+                  width="3"
+                  [attr.height]="(j + 1) * 2.6"
+                  rx="1"
+                  [attr.fill]="j <= i ? '#F2B33D' : '#4A5E54'"
+                />
+                }
+              </svg>
+              <span>{{ 'onboarding.activities.' + a + '.short' | transloco }}</span>
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+      }
+
+      <!-- 2. Objetivo -->
+      @case ('goal') {
+      <h1 class="bubble title">{{ 'onboarding.titles.goal' | transloco }}</h1>
+      <div class="stack">
+        <div class="grid-2" role="group" [attr.aria-label]="'onboarding.titles.goal' | transloco">
+          @for (g of goals; track g) {
+          <button type="button" class="choice card" [attr.aria-pressed]="s.goal() === g" (click)="s.setGoal(g)">
+            <span class="card-label">{{ 'onboarding.goals.' + g + '.label' | transloco }}</span>
+            <span class="card-hint">{{ 'onboarding.goals.' + g + '.hint' | transloco }}</span>
+          </button>
+          }
+        </div>
+
+        @if (s.hasPace()) {
+        <div class="panel">
+          <owli-stepper
+            labelId="ob-target"
+            [label]="'onboarding.targetWeight' | transloco"
+            [display]="targetText()"
+            [value]="s.targetWeightKg()"
+            [min]="35"
+            [max]="250"
+            [step]="0.5"
+            [decLabel]="'onboarding.less' | transloco: { what: ('onboarding.targetWeight' | transloco) }"
+            [incLabel]="'onboarding.more' | transloco: { what: ('onboarding.targetWeight' | transloco) }"
+            (changed)="s.setTargetWeight($event)"
+          />
+          @if (s.plan()?.wrongDirection) {
+          <p class="err" role="alert">
+            {{ (s.goal() === 'cut' ? 'onboarding.errors.wrongDirectionCut' : 'onboarding.errors.wrongDirectionBulk') |
+            transloco }}
+          </p>
+          } @else if (s.plan()?.targetBelowHealthyBmi) {
+          <p class="warn">{{ 'onboarding.lowBmi' | transloco }}</p>
+          }
+        </div>
+
+        <div class="panel">
+          <div class="pace-head">
+            <span class="field-label">{{ 'onboarding.pace' | transloco }}</span>
+            <span class="num rate">{{ 'onboarding.rate' | transloco: rateParams() }}</span>
+          </div>
+          <div class="grid-3" role="group" [attr.aria-label]="'onboarding.pace' | transloco">
+            @for (p of paces; track p) {
+            <button type="button" class="choice" [attr.aria-pressed]="s.pace() === p" (click)="s.setPace(p)">
+              {{ 'onboarding.paces.' + p | transloco }}
+            </button>
+            }
+          </div>
+          @if (etaText()) {
+          <p class="eta">{{ 'onboarding.eta' | transloco: { date: etaText() } }}</p>
+          <p class="hint">{{ 'onboarding.etaHonest' | transloco }}</p>
+          } @else if (s.plan()?.tooSlow) {
+          <p class="eta">{{ 'onboarding.etaTooSlow' | transloco }}</p>
+          }
+        </div>
+        } @if (s.plan(); as plan) {
+        <section class="target">
+          <p class="hint">{{ 'onboarding.explain.' + s.goal() | transloco: explainParams() }}</p>
+          @if (plan.clamped) {
+          <p class="warn" role="status">{{ 'onboarding.clamped' | transloco: { min: num(plan.minSafe) } }}</p>
+          }
+          <p class="provisional">{{ 'onboarding.provisional' | transloco }}</p>
+        </section>
+        }
+      </div>
+      }
+
+      <!-- 3. Dieta -->
+      @case ('diet') {
+      <h1 class="bubble title">{{ 'onboarding.titles.diet' | transloco }}</h1>
+      <div class="stack">
+        <div class="stack tight" role="group" [attr.aria-label]="'onboarding.titles.diet' | transloco">
+          @for (d of diets; track d) {
+          <button type="button" class="choice card row" [attr.aria-pressed]="s.diet() === d" (click)="s.setDiet(d)">
+            <span class="card-label">{{ 'onboarding.diets.' + d + '.label' | transloco }}</span>
+            <span class="card-hint">{{ 'onboarding.diets.' + d + '.hint' | transloco }}</span>
+          </button>
+          }
+        </div>
+        @if (s.visibleErrors().includes('dietRequired')) {
+        <p class="err" role="alert">{{ 'onboarding.errors.dietRequired' | transloco }}</p>
+        }
+        <div role="group" [attr.aria-label]="'onboarding.restrLabel' | transloco">
+          <p class="field-label">{{ 'onboarding.restrLabel' | transloco }}</p>
+          <div class="pills">
+            @for (r of restrictionOptions; track r) {
+            <button
+              type="button"
+              class="choice pill"
+              [attr.aria-pressed]="s.restrictions().includes(r)"
+              (click)="s.toggleRestriction(r)"
+            >
+              {{ 'onboarding.restrictions.' + r | transloco }}
+            </button>
+            }
+          </div>
+          <p class="hint">{{ 'onboarding.restrHint' | transloco }}</p>
+        </div>
+        @if (s.diet(); as d) {
+        <div class="voice">
+          <owli-owl mood="energetic" [size]="40" [decorative]="true" />
+          <p>{{ 'onboarding.voice.' + d | transloco }}</p>
+        </div>
+        }
+      </div>
+      }
+
+      <!-- Listo -->
+      @case ('ready') {
+      <main class="ready">
+        <div class="ready-head">
+          <owli-owl mood="satisfied" [size]="96" />
+          <p class="bubble">
+            @if (s.greetingName()) { {{ 'onboarding.readyNamed' | transloco: { name: s.greetingName() } }} } @else { {{
+            'onboarding.ready' | transloco }} }
+          </p>
+        </div>
+        @if (s.plan(); as plan) {
+        <section class="target solid">
+          <p class="field-label">{{ 'onboarding.targetLabel' | transloco }}</p>
+          <p class="big num">{{ num(plan.dailyTarget) }} <span>{{ 'common.kcal' | transloco }}</span></p>
+          <p class="hint">
+            {{ 'onboarding.goals.' + s.goal() + '.label' | transloco }} · {{ 'onboarding.diets.' + s.diet() + '.label' |
+            transloco }} @for (r of s.restrictions(); track r) { · {{ 'onboarding.restrictions.' + r | transloco }} }
+          </p>
+        </section>
+        }
+        <p class="gift">{{ 'onboarding.gift' | transloco }}</p>
+        <p class="hint">{{ 'onboarding.later' | transloco }}</p>
+      </main>
+      } }
+    </div>
+
+    @if (s.step() === 'goal' && s.plan(); as plan) {
+    <p class="burn" aria-live="polite">
+      <span class="field-label">{{ 'onboarding.targetLabel' | transloco }}</span>
+      <span class="num burn-value">{{ num(plan.dailyTarget) }} {{ 'common.kcal' | transloco }}</span>
+    </p>
+    } @if (s.step() === 'body') {
+    <p class="burn" aria-live="polite">
+      @if (s.plan(); as plan) {
+      <span class="field-label">{{ 'onboarding.burnLabel' | transloco }}</span>
+      <span class="num burn-value">{{ num(plan.tdee) }} {{ 'common.kcal' | transloco }}</span>
+      } @else {
+      <span class="field-label">{{ 'onboarding.burnPending' | transloco }}</span>
+      }
+    </p>
+    }
+    <button type="button" class="cta" (click)="next()">
+      {{ (s.step() === 'ready' ? 'onboarding.goToDay' : s.step() === 'diet' ? 'onboarding.done' : 'onboarding.next') |
+      transloco }}
+    </button>
+    } }
+  </div>
+</ion-content>
