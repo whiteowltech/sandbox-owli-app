@@ -172,7 +172,9 @@
     "readyNamed": "Listo, {{name}}. Ya puedes empezar tu día.",
     "gift": "Tus primeros 15 análisis con IA son de regalo. Anotar a mano es gratis siempre.",
     "later": "Lo demás (comidas al día, recordatorios, Apple Health) te lo pregunto cuando haga falta.",
-    "goToDay": "Ir a mi día"
+    "goToDay": "Ir a mi día",
+    "mealsLabel": "¿Cuántas comidas haces al día?",
+    "mealsHint": "Owli reparte lo que te falta entre las comidas que quedan. Lo puedes cambiar en tu cuenta."
   },
   "today": {
     "title": "Hoy",
@@ -308,15 +310,118 @@
     }
   },
   "week": {
-    "title": "Tu semana"
+    "title": "Tu semana",
+    "range": "{{start}} al {{end}}",
+    "navAria": "Cambiar de semana",
+    "previous": "Semana anterior",
+    "next": "Semana siguiente",
+    "error": "No pudimos cargar tu semana. Revisa tu conexión.",
+    "emptyTitle": "Esta semana no hay días anotados",
+    "emptyBody": "Anota tus comidas y acá vas a ver cómo te fue cada día.",
+    "closed": "Cerraste {{closed}} de {{logged}} días anotados",
+    "closedOne": "Cerraste {{closed}} de {{logged}} día anotado",
+    "comment": {
+      "proteinOne": "Un día la proteína quedó corta: priorízala en el almuerzo.",
+      "proteinOther": "{{n}} días la proteína quedó corta: priorízala en el almuerzo.",
+      "overOne": "Un día te pasaste de calorías. Un día no define nada.",
+      "overOther": "{{n}} días te pasaste de calorías. Mira qué comida se estiró.",
+      "allClosed": "Todos los días que anotaste quedaron en rango.",
+      "keepGoing": "Vas bien: anota todas las comidas para cerrar más días."
+    },
+    "streak": "Llevas {{n}} días seguidos anotando.",
+    "daysAria": "Días de la semana",
+    "state": {
+      "closed": "día cerrado",
+      "open": "día sin cerrar",
+      "empty": "sin anotaciones",
+      "today": "hoy, en curso"
+    },
+    "detail": "{{kcal}} kcal ({{dk}}) y {{p}} g de proteína ({{dp}} g).",
+    "verdict": {
+      "closed": "Día cerrado.",
+      "open": "No quedó en rango.",
+      "today": "El día sigue en curso.",
+      "empty": ""
+    },
+    "kcalTitle": "Calorías por día",
+    "proteinTitle": "Proteína por día",
+    "avgKcal": "Promedio {{v}} kcal",
+    "avgProtein": "Promedio {{v}} g",
+    "targetKcal": "Objetivo {{v}}",
+    "targetProtein": "Objetivo {{v}} g",
+    "showTable": "Ver como tabla",
+    "hideTable": "Ocultar tabla",
+    "tableCaption": "Calorías y proteína de la semana",
+    "col": {
+      "day": "Día",
+      "kcal": "kcal",
+      "protein": "Proteína",
+      "closed": "Cerrado"
+    },
+    "closedCell": {
+      "closed": "Sí",
+      "open": "No",
+      "today": "En curso",
+      "empty": "—"
+    },
+    "note": "Los promedios usan los días terminados con anotaciones. Todos los días se comparan con tu objetivo actual."
   },
   "account": {
     "title": "Tu cuenta",
+    "targetLabel": "Tu objetivo diario",
+    "macros": "Proteína {{p}} g, carbos {{c}} g, grasa {{f}} g",
+    "was": "Antes: {{v}} kcal",
+    "planTitle": "Tu plan",
+    "sections": {
+      "body": "Tu cuerpo",
+      "goal": "Objetivo",
+      "diet": "Dieta",
+      "meals": "Comidas por día",
+      "name": "Nombre"
+    },
+    "mealsOne": "1 comida",
+    "mealsOther": "{{n}} comidas",
+    "mealsHint": {
+      "1": "Una comida al día (OMAD): Owli te sugiere cubrir todo de una vez.",
+      "2": "Dos comidas, por ejemplo almuerzo y cena.",
+      "3": "Tres comidas: desayuno, almuerzo y cena.",
+      "4": "Cuatro comidas: desayuno, almuerzo, merienda y cena.",
+      "5": "Cinco comidas: las cuatro de siempre y una colación."
+    },
+    "mealsWhy": "Owli reparte lo que te falta del día entre las comidas que quedan. Si haces ayuno intermitente, elige menos comidas.",
+    "noName": "Sin nombre",
+    "discard": "Descartar",
+    "save": "Guardar cambios",
+    "saving": "Guardando…",
+    "fixErrors": "Corrige lo marcado para poder guardar.",
+    "saved": {
+      "saved": "Listo: tu plan quedó actualizado.",
+      "pending": "Guardado en este teléfono. Se sube a tu cuenta cuando vuelva la conexión."
+    },
+    "creditsTitle": "Análisis con IA",
+    "creditsLeft": "Te quedan {{n}}",
+    "creditsLoading": "Cargando tus análisis…",
+    "bucket": {
+      "today": "Gratis de hoy",
+      "welcome": "De bienvenida",
+      "packs": "Comprados"
+    },
+    "creditsHow": "Cada foto o audio analizado usa 1. Se usan primero los gratis de hoy, después los de bienvenida y al final los comprados. Anotar a mano es siempre gratis.",
+    "pro": "Owli Pro: análisis ilimitados",
+    "proSoon": "Owli Pro y los packs de análisis llegan pronto.",
+    "prefsTitle": "Preferencias",
     "language": "Idioma",
+    "accountTitle": "Cuenta",
+    "anonymous": "Tu cuenta es anónima y está ligada a este teléfono. Pronto vas a poder vincularla con Apple o Google para no perder tus datos si cambias de teléfono.",
+    "delete": "Borrar mi cuenta",
+    "deleteTitle": "¿Borrar tu cuenta?",
+    "deleteBody": "Se borran tu perfil, tus comidas y tus análisis restantes, en este teléfono y en el servidor. No se puede deshacer.",
+    "deleteConfirm": "Borrar definitivamente",
+    "deleting": "Borrando…",
+    "deleteFailed": "No pudimos borrar tu cuenta: revisa tu conexión e inténtalo de nuevo. Por ahora sigue intacta.",
     "disclaimer": "Owli no sustituye el consejo médico ni nutricional. Si tienes una condición de salud, consulta a un profesional antes de cambiar tu alimentación."
   },
   "dev": {
-    "demoProfile": "Usar un perfil de prueba",
-    "resetProfile": "Borrar el perfil y volver a empezar"
+    "demoProfile": "Usar un perfil de prueba"
   }
 }

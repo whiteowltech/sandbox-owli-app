@@ -50,6 +50,7 @@ export class OnboardingPage {
   protected readonly paces: Pace[] = ['slow', 'steady', 'fast'];
   protected readonly diets: Diet[] = ['omnivore', 'vegetarian', 'pescetarian', 'vegan', 'keto', 'paleo', 'carnivore'];
   protected readonly restrictionOptions: Restriction[] = ['gluten_free', 'lactose_free'];
+  protected readonly mealOptions = [1, 2, 3, 4, 5];
   protected readonly ranges = { ...RANGES, ageMin: AGE_INPUT_MIN, ageMax: 99, heightMin: 130, heightMax: 220 };
 
   protected readonly knots = computed(() => {

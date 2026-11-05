@@ -292,6 +292,22 @@
           </div>
           <p class="hint">{{ 'onboarding.restrHint' | transloco }}</p>
         </div>
+        <div role="group" [attr.aria-label]="'onboarding.mealsLabel' | transloco">
+          <p class="field-label">{{ 'onboarding.mealsLabel' | transloco }}</p>
+          <div class="grid-5">
+            @for (n of mealOptions; track n) {
+            <button
+              type="button"
+              class="choice num"
+              [attr.aria-pressed]="s.mealsPerDay() === n"
+              (click)="s.setMeals(n)"
+            >
+              {{ n }}
+            </button>
+            }
+          </div>
+          <p class="hint">{{ 'onboarding.mealsHint' | transloco }}</p>
+        </div>
         @if (s.diet(); as d) {
         <div class="voice">
           <owli-owl mood="energetic" [size]="40" [decorative]="true" />

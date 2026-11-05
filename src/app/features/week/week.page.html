@@ -1,0 +1,171 @@
+<ion-content>
+  <div class="screen">
+    <owli-screen-header [title]="'week.title' | transloco" />
+
+    <nav class="range" [attr.aria-label]="'week.navAria' | transloco">
+      <button type="button" class="nav" [attr.aria-label]="'week.previous' | transloco" (click)="go(-1)">
+        <ion-icon name="chevron-back-outline" aria-hidden="true" />
+      </button>
+      <p aria-live="polite">{{ range() }}</p>
+      <button
+        type="button"
+        class="nav"
+        [attr.aria-label]="'week.next' | transloco"
+        [disabled]="store.isCurrent()"
+        (click)="go(1)"
+      >
+        <ion-icon name="chevron-forward-outline" aria-hidden="true" />
+      </button>
+    </nav>
+
+    @if (store.error() && !store.week()) {
+    <p class="err" role="alert">{{ 'week.error' | transloco }}</p>
+    <button type="button" class="retry" (click)="store.load()">{{ 'today.retry' | transloco }}</button>
+    } @if (store.week(); as w) {
+    <section class="summary" aria-labelledby="week-summary" [class.loading]="store.loading()">
+      <owli-owl [mood]="weekMood()" [size]="88" [decorative]="true" />
+      <div>
+        @if (w.review.loggedDays === 0) {
+        <h2 id="week-summary">{{ 'week.emptyTitle' | transloco }}</h2>
+        <p>{{ 'week.emptyBody' | transloco }}</p>
+        } @else {
+        <h2 id="week-summary">
+          {{ (w.review.loggedDays === 1 ? 'week.closedOne' : 'week.closed') | transloco: { closed: w.review.closedDays,
+          logged: w.review.loggedDays } }}
+        </h2>
+        @if (comment(); as c) {
+        <p>{{ c.key | transloco: { n: c.n } }}</p>
+        } @if (w.review.streak >= 2) {
+        <p class="streak">{{ 'week.streak' | transloco: { n: w.review.streak } }}</p>
+        } }
+      </div>
+    </section>
+
+    <div class="days" role="group" [attr.aria-label]="'week.daysAria' | transloco">
+      @for (d of days(); track d.date) {
+      <button
+        type="button"
+        class="day"
+        [class]="'day ' + d.state"
+        [attr.aria-pressed]="selected() === d.date"
+        [attr.aria-label]="d.long + ': ' + ('week.state.' + d.state | transloco)"
+        (click)="pick(d.date)"
+      >
+        <owli-owl [mood]="d.mood" [size]="36" [decorative]="true" />
+        <span>{{ d.short }}</span>
+      </button>
+      }
+    </div>
+
+    @if (detail(); as s) {
+    <div class="detail" role="status">
+      <p class="detail-title">{{ s.title }}</p>
+      @if (s.state === 'empty') {
+      <p>{{ 'week.state.empty' | transloco }}</p>
+      } @else {
+      <p class="num">
+        {{ 'week.detail' | transloco: { kcal: s.kcal, dk: s.dk, p: s.p, dp: s.dp } }} {{ 'week.verdict.' + s.state |
+        transloco }}
+      </p>
+      }
+    </div>
+    }
+
+    <section class="chart" aria-labelledby="ch-kcal">
+      <header>
+        <h2 id="ch-kcal">{{ 'week.kcalTitle' | transloco }}</h2>
+        @if (w.review.avgKcal !== null) {
+        <span class="num">{{ 'week.avgKcal' | transloco: { v: num(w.review.avgKcal) } }}</span>
+        }
+      </header>
+      <div class="plot">
+        <div class="target" [style.bottom.%]="targetLines().kcal" aria-hidden="true">
+          <span class="num">{{ 'week.targetKcal' | transloco: { v: num(w.target.kcal) } }}</span>
+        </div>
+        @for (d of days(); track d.date) {
+        <button
+          type="button"
+          class="col"
+          [class.dim]="selected() !== null && selected() !== d.date"
+          [attr.aria-label]="d.long + ': ' + num(d.kcal) + ' kcal'"
+          (click)="pick(d.date)"
+        >
+          <span class="bar kcal" [class.today]="d.state === 'today'" [style.height.%]="d.kcalH"></span>
+        </button>
+        }
+      </div>
+      <div class="axis" aria-hidden="true">
+        @for (d of days(); track d.date) {
+        <span>{{ d.short }}</span>
+        }
+      </div>
+    </section>
+
+    <section class="chart" aria-labelledby="ch-protein">
+      <header>
+        <h2 id="ch-protein">{{ 'week.proteinTitle' | transloco }}</h2>
+        @if (w.review.avgProteinG !== null) {
+        <span class="num">{{ 'week.avgProtein' | transloco: { v: num(w.review.avgProteinG) } }}</span>
+        }
+      </header>
+      <div class="plot short">
+        <div class="target" [style.bottom.%]="targetLines().protein" aria-hidden="true">
+          <span class="num">{{ 'week.targetProtein' | transloco: { v: num(w.target.proteinG) } }}</span>
+        </div>
+        @for (d of days(); track d.date) {
+        <button
+          type="button"
+          class="col"
+          [class.dim]="selected() !== null && selected() !== d.date"
+          [attr.aria-label]="d.long + ': ' + num(d.proteinG) + ' g'"
+          (click)="pick(d.date)"
+        >
+          <span class="bar protein" [class.today]="d.state === 'today'" [style.height.%]="d.proteinH"></span>
+        </button>
+        }
+      </div>
+      <div class="axis" aria-hidden="true">
+        @for (d of days(); track d.date) {
+        <span>{{ d.short }}</span>
+        }
+      </div>
+    </section>
+
+    <button type="button" class="toggle" [attr.aria-expanded]="showTable()" (click)="showTable.set(!showTable())">
+      {{ (showTable() ? 'week.hideTable' : 'week.showTable') | transloco }}
+    </button>
+    @if (showTable()) {
+    <table class="num">
+      <caption>
+        {{ 'week.tableCaption' | transloco }}
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">{{ 'week.col.day' | transloco }}</th>
+          <th scope="col">{{ 'week.col.kcal' | transloco }}</th>
+          <th scope="col">{{ 'week.col.protein' | transloco }}</th>
+          <th scope="col">{{ 'week.col.closed' | transloco }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (d of days(); track d.date) {
+        <tr>
+          <th scope="row">{{ d.long }}</th>
+          @if (d.state === 'empty') {
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          } @else {
+          <td>{{ num(d.kcal) }}</td>
+          <td>{{ num(d.proteinG) }} g</td>
+          <td>{{ 'week.closedCell.' + d.state | transloco }}</td>
+          }
+        </tr>
+        }
+      </tbody>
+    </table>
+    }
+    <p class="note">{{ 'week.note' | transloco }}</p>
+    }
+  </div>
+</ion-content>

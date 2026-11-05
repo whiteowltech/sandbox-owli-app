@@ -138,6 +138,7 @@ describe('OnboardingStore', () => {
     s.next();
     s.next();
     s.setDiet('keto');
+    s.setMeals(2);
     s.next();
     const p = s.toProfile();
     expect(p).toMatchObject({
@@ -145,7 +146,7 @@ describe('OnboardingStore', () => {
       sex: 'male',
       diet: 'keto',
       restrictions: [],
-      mealsPerDay: 4,
+      mealsPerDay: 2,
       units: 'metric',
     });
   });

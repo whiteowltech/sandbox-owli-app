@@ -1,0 +1,358 @@
+<ion-content>
+  <div class="screen">
+    <owli-screen-header [title]="'account.title' | transloco" />
+
+    @if (s.draft(); as d) {
+    <!-- Objetivo diario: se recalcula en vivo mientras se edita -->
+    <section class="target" aria-labelledby="acc-target" aria-live="polite">
+      <p class="field-label" id="acc-target">{{ 'account.targetLabel' | transloco }}</p>
+      @if (s.plan(); as plan) {
+      <p class="big num">{{ num(plan.dailyTarget) }} <span>{{ 'common.kcal' | transloco }}</span></p>
+      @if (s.targets(); as t) {
+      <p class="macros num">
+        {{ 'account.macros' | transloco: { p: num(t.proteinG), c: num(t.carbsG), f: num(t.fatG) } }}
+      </p>
+      } @if (s.dirty() && s.savedPlan(); as before) { @if (before.dailyTarget !== plan.dailyTarget) {
+      <p class="was num">{{ 'account.was' | transloco: { v: num(before.dailyTarget) } }}</p>
+      } } @if (plan.clamped) {
+      <p class="warn" role="status">{{ 'onboarding.clamped' | transloco: { min: num(plan.minSafe) } }}</p>
+      } }
+      <p class="provisional">{{ 'onboarding.provisional' | transloco }}</p>
+    </section>
+
+    <h2 class="section-title">{{ 'account.planTitle' | transloco }}</h2>
+    <div class="rows">
+      <!-- Tu cuerpo -->
+      <button
+        type="button"
+        class="row"
+        aria-controls="acc-body"
+        [attr.aria-expanded]="s.open() === 'body'"
+        (click)="toggle('body')"
+      >
+        <span class="row-label">{{ 'account.sections.body' | transloco }}</span>
+        <span class="row-value">{{ summaries()?.body }}</span>
+      </button>
+      @if (s.open() === 'body') {
+      <div class="editor" id="acc-body">
+        <div class="grid-2" role="group" [attr.aria-label]="'onboarding.sex' | transloco">
+          @for (x of sexes; track x) {
+          <button type="button" class="choice" [attr.aria-pressed]="d.sex === x" (click)="s.setSex(x)">
+            {{ 'onboarding.sexes.' + x | transloco }}
+          </button>
+          }
+        </div>
+        <owli-stepper
+          labelId="acc-age"
+          [label]="'onboarding.age' | transloco"
+          [display]="'onboarding.years' | transloco: { n: d.ageYears }"
+          [value]="d.ageYears"
+          [min]="13"
+          [max]="99"
+          [decLabel]="'onboarding.less' | transloco: { what: ('onboarding.age' | transloco) }"
+          [incLabel]="'onboarding.more' | transloco: { what: ('onboarding.age' | transloco) }"
+          (changed)="s.setAge($event)"
+        />
+        @if (s.errors().includes('underage')) {
+        <p class="err" role="alert">{{ 'onboarding.errors.underage' | transloco }}</p>
+        }
+        <owli-stepper
+          labelId="acc-height"
+          [label]="'onboarding.height' | transloco"
+          [display]="heightText()"
+          [value]="d.heightCm"
+          [min]="130"
+          [max]="220"
+          [decLabel]="'onboarding.less' | transloco: { what: ('onboarding.height' | transloco) }"
+          [incLabel]="'onboarding.more' | transloco: { what: ('onboarding.height' | transloco) }"
+          (changed)="s.setHeight($event)"
+        />
+        <owli-stepper
+          labelId="acc-weight"
+          [label]="'onboarding.weight' | transloco"
+          [display]="weightText()"
+          [value]="d.weightKg"
+          [min]="35"
+          [max]="250"
+          [step]="0.5"
+          [decLabel]="'onboarding.less' | transloco: { what: ('onboarding.weight' | transloco) }"
+          [incLabel]="'onboarding.more' | transloco: { what: ('onboarding.weight' | transloco) }"
+          (changed)="s.setWeight($event)"
+        />
+        <div role="group" [attr.aria-label]="'onboarding.activity' | transloco">
+          <p class="field-label">
+            {{ 'onboarding.activity' | transloco }}:
+            <strong>{{ 'onboarding.activities.' + d.activity + '.long' | transloco }}</strong>
+          </p>
+          <div class="grid-5">
+            @for (a of activities; track a; let i = $index) {
+            <button
+              type="button"
+              class="choice act"
+              [attr.aria-pressed]="d.activity === a"
+              [attr.aria-label]="'onboarding.activities.' + a + '.long' | transloco"
+              (click)="s.setActivity(a)"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 16" width="24" height="16">
+                @for (j of [0, 1, 2, 3, 4]; track j) {
+                <rect
+                  [attr.x]="1 + j * 5"
+                  [attr.y]="14 - (j + 1) * 2.6"
+                  width="3"
+                  [attr.height]="(j + 1) * 2.6"
+                  rx="1"
+                  [attr.fill]="j <= i ? '#F2B33D' : '#4A5E54'"
+                />
+                }
+              </svg>
+              <span>{{ 'onboarding.activities.' + a + '.short' | transloco }}</span>
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+      }
+
+      <!-- Objetivo -->
+      <button
+        type="button"
+        class="row"
+        aria-controls="acc-goal"
+        [attr.aria-expanded]="s.open() === 'goal'"
+        (click)="toggle('goal')"
+      >
+        <span class="row-label">{{ 'account.sections.goal' | transloco }}</span>
+        <span class="row-value">{{ summaries()?.goal }}</span>
+      </button>
+      @if (s.open() === 'goal') {
+      <div class="editor" id="acc-goal">
+        <div class="grid-2" role="group" [attr.aria-label]="'account.sections.goal' | transloco">
+          @for (g of goals; track g) {
+          <button type="button" class="choice card" [attr.aria-pressed]="d.goal === g" (click)="s.setGoal(g)">
+            <span class="card-label">{{ 'onboarding.goals.' + g + '.label' | transloco }}</span>
+            <span class="card-hint">{{ 'onboarding.goals.' + g + '.hint' | transloco }}</span>
+          </button>
+          }
+        </div>
+        @if (s.hasPace()) {
+        <owli-stepper
+          labelId="acc-target-weight"
+          [label]="'onboarding.targetWeight' | transloco"
+          [display]="targetText()"
+          [value]="d.targetWeightKg"
+          [min]="35"
+          [max]="250"
+          [step]="0.5"
+          [decLabel]="'onboarding.less' | transloco: { what: ('onboarding.targetWeight' | transloco) }"
+          [incLabel]="'onboarding.more' | transloco: { what: ('onboarding.targetWeight' | transloco) }"
+          (changed)="s.setTargetWeight($event)"
+        />
+        @if (s.errors().includes('wrongDirectionCut')) {
+        <p class="err" role="alert">{{ 'onboarding.errors.wrongDirectionCut' | transloco }}</p>
+        } @else if (s.errors().includes('wrongDirectionBulk')) {
+        <p class="err" role="alert">{{ 'onboarding.errors.wrongDirectionBulk' | transloco }}</p>
+        } @else if (s.plan()?.targetBelowHealthyBmi) {
+        <p class="warn">{{ 'onboarding.lowBmi' | transloco }}</p>
+        }
+        <div>
+          <div class="pace-head">
+            <span class="field-label">{{ 'onboarding.pace' | transloco }}</span>
+            <span class="num rate">{{ 'onboarding.rate' | transloco: rateParams() }}</span>
+          </div>
+          <div class="grid-3" role="group" [attr.aria-label]="'onboarding.pace' | transloco">
+            @for (p of paces; track p) {
+            <button type="button" class="choice" [attr.aria-pressed]="d.pace === p" (click)="s.setPace(p)">
+              {{ 'onboarding.paces.' + p | transloco }}
+            </button>
+            }
+          </div>
+          @if (etaText()) {
+          <p class="hint eta">{{ 'onboarding.eta' | transloco: { date: etaText() } }}</p>
+          } @else if (s.plan()?.tooSlow) {
+          <p class="hint eta">{{ 'onboarding.etaTooSlow' | transloco }}</p>
+          }
+        </div>
+        }
+      </div>
+      }
+
+      <!-- Dieta -->
+      <button
+        type="button"
+        class="row"
+        aria-controls="acc-diet"
+        [attr.aria-expanded]="s.open() === 'diet'"
+        (click)="toggle('diet')"
+      >
+        <span class="row-label">{{ 'account.sections.diet' | transloco }}</span>
+        <span class="row-value">{{ summaries()?.diet }}</span>
+      </button>
+      @if (s.open() === 'diet') {
+      <div class="editor" id="acc-diet">
+        <div class="stack tight" role="group" [attr.aria-label]="'account.sections.diet' | transloco">
+          @for (x of diets; track x) {
+          <button type="button" class="choice card row-card" [attr.aria-pressed]="d.diet === x" (click)="s.setDiet(x)">
+            <span class="card-label">{{ 'onboarding.diets.' + x + '.label' | transloco }}</span>
+            <span class="card-hint">{{ 'onboarding.diets.' + x + '.hint' | transloco }}</span>
+          </button>
+          }
+        </div>
+        <div role="group" [attr.aria-label]="'onboarding.restrLabel' | transloco">
+          <p class="field-label">{{ 'onboarding.restrLabel' | transloco }}</p>
+          <div class="pills">
+            @for (r of restrictionOptions; track r) {
+            <button
+              type="button"
+              class="choice pill"
+              [attr.aria-pressed]="d.restrictions.includes(r)"
+              (click)="s.toggleRestriction(r)"
+            >
+              {{ 'onboarding.restrictions.' + r | transloco }}
+            </button>
+            }
+          </div>
+          <p class="hint">{{ 'onboarding.restrHint' | transloco }}</p>
+        </div>
+      </div>
+      }
+
+      <!-- Comidas por día -->
+      <button
+        type="button"
+        class="row"
+        aria-controls="acc-meals"
+        [attr.aria-expanded]="s.open() === 'meals'"
+        (click)="toggle('meals')"
+      >
+        <span class="row-label">{{ 'account.sections.meals' | transloco }}</span>
+        <span class="row-value">{{ summaries()?.meals }}</span>
+      </button>
+      @if (s.open() === 'meals') {
+      <div class="editor" id="acc-meals">
+        <div class="grid-5" role="group" [attr.aria-label]="'account.sections.meals' | transloco">
+          @for (n of mealOptions; track n) {
+          <button type="button" class="choice num" [attr.aria-pressed]="d.mealsPerDay === n" (click)="s.setMeals(n)">
+            {{ n }}
+          </button>
+          }
+        </div>
+        <p class="hint">{{ 'account.mealsHint.' + d.mealsPerDay | transloco }}</p>
+        <p class="hint">{{ 'account.mealsWhy' | transloco }}</p>
+      </div>
+      }
+
+      <!-- Nombre -->
+      <button
+        type="button"
+        class="row"
+        aria-controls="acc-name"
+        [attr.aria-expanded]="s.open() === 'name'"
+        (click)="toggle('name')"
+      >
+        <span class="row-label">{{ 'account.sections.name' | transloco }}</span>
+        <span class="row-value">{{ summaries()?.name }}</span>
+      </button>
+      @if (s.open() === 'name') {
+      <div class="editor" id="acc-name">
+        <label class="sr-only" for="acc-name-input">{{ 'onboarding.nameLabel' | transloco }}</label>
+        <input
+          id="acc-name-input"
+          class="name-input"
+          type="text"
+          autocomplete="given-name"
+          maxlength="40"
+          [placeholder]="'onboarding.namePlaceholder' | transloco"
+          [value]="d.name"
+          (input)="s.setName($any($event.target).value)"
+        />
+      </div>
+      }
+    </div>
+
+    @if (s.dirty()) {
+    <div class="save-bar">
+      <button type="button" class="ghost" (click)="s.discard()">{{ 'account.discard' | transloco }}</button>
+      <button type="button" class="cta" [disabled]="s.errors().length > 0 || saving()" (click)="save()">
+        {{ (saving() ? 'account.saving' : 'account.save') | transloco }}
+      </button>
+    </div>
+    @if (s.errors().length > 0) {
+    <p class="hint">{{ 'account.fixErrors' | transloco }}</p>
+    } } @else if (saveResult(); as r) {
+    <p class="saved" role="status">{{ 'account.saved.' + r | transloco }}</p>
+    }
+
+    <!-- Créditos -->
+    <h2 class="section-title">{{ 'account.creditsTitle' | transloco }}</h2>
+    <section class="card-block">
+      @if (analysis.wallet(); as w) { @if (w.isPro) {
+      <p class="credits-big">{{ 'account.pro' | transloco }}</p>
+      } @else {
+      <p class="credits-big num">{{ 'account.creditsLeft' | transloco: { n: w.total } }}</p>
+      <ul class="credit-list num">
+        <li><span>{{ 'account.bucket.today' | transloco }}</span><span>{{ w.freeToday }}</span></li>
+        <li><span>{{ 'account.bucket.welcome' | transloco }}</span><span>{{ w.welcome }}</span></li>
+        <li><span>{{ 'account.bucket.packs' | transloco }}</span><span>{{ w.packs }}</span></li>
+      </ul>
+      } } @else {
+      <p class="hint">{{ 'account.creditsLoading' | transloco }}</p>
+      }
+      <p class="hint">{{ 'account.creditsHow' | transloco }}</p>
+      <p class="hint soon">{{ 'account.proSoon' | transloco }}</p>
+    </section>
+
+    <!-- Preferencias -->
+    <h2 class="section-title">{{ 'account.prefsTitle' | transloco }}</h2>
+    <section class="card-block prefs">
+      <div class="pref">
+        <span>{{ 'account.language' | transloco }}</span>
+        <div class="seg" role="group" [attr.aria-label]="'account.language' | transloco">
+          @for (l of langs; track l) {
+          <button type="button" [attr.aria-pressed]="l === lang()" (click)="setLang(l)">{{ l.toUpperCase() }}</button>
+          }
+        </div>
+      </div>
+      <div class="pref">
+        <span>{{ 'onboarding.units' | transloco }}</span>
+        <div class="seg" role="group" [attr.aria-label]="'onboarding.units' | transloco">
+          <button type="button" [attr.aria-pressed]="d.units === 'metric'" (click)="setUnits('metric')">
+            {{ 'onboarding.unitsMetric' | transloco }}
+          </button>
+          <button type="button" [attr.aria-pressed]="d.units === 'imperial'" (click)="setUnits('imperial')">
+            {{ 'onboarding.unitsImperial' | transloco }}
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cuenta -->
+    <h2 class="section-title">{{ 'account.accountTitle' | transloco }}</h2>
+    <section class="card-block">
+      <p class="hint">{{ 'account.anonymous' | transloco }}</p>
+      @if (!confirmingDelete()) {
+      <button type="button" class="danger" (click)="confirmingDelete.set(true)">
+        {{ 'account.delete' | transloco }}
+      </button>
+      } @else {
+      <div class="confirm" role="alertdialog" aria-labelledby="acc-del-title" aria-describedby="acc-del-body">
+        <p id="acc-del-title" class="confirm-title">{{ 'account.deleteTitle' | transloco }}</p>
+        <p id="acc-del-body" class="hint">{{ 'account.deleteBody' | transloco }}</p>
+        @if (deleteFailed()) {
+        <p class="err" role="alert">{{ 'account.deleteFailed' | transloco }}</p>
+        }
+        <div class="confirm-actions">
+          <button type="button" class="ghost" (click)="confirmingDelete.set(false)">
+            {{ 'common.cancel' | transloco }}
+          </button>
+          <button type="button" class="danger solid" [disabled]="deleting()" (click)="deleteAccount()">
+            {{ (deleting() ? 'account.deleting' : 'account.deleteConfirm') | transloco }}
+          </button>
+        </div>
+      </div>
+      }
+    </section>
+
+    <p class="disclaimer">{{ 'account.disclaimer' | transloco }}</p>
+    }
+  </div>
+</ion-content>

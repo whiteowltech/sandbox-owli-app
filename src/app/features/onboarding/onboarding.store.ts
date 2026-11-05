@@ -38,6 +38,8 @@ export interface OnboardingState {
   targetTouched: boolean;
   diet: Diet | null;
   restrictions: Restriction[];
+  /** De 1 (OMAD) a 5: define cómo se reparte lo que falta en las sugerencias. */
+  mealsPerDay: number;
   units: UnitSystem;
   /** Se activa al intentar avanzar con errores. */
   showErrors: boolean;
@@ -58,6 +60,7 @@ export const INITIAL_STATE: OnboardingState = {
   targetTouched: false,
   diet: null,
   restrictions: [],
+  mealsPerDay: 3,
   units: 'metric',
   showErrors: false,
 };
@@ -195,6 +198,9 @@ export const OnboardingStore = signalStore(
       const list = store.restrictions();
       patchState(store, { restrictions: list.includes(r) ? list.filter((x) => x !== r) : [...list, r] });
     },
+    setMeals(mealsPerDay: number): void {
+      patchState(store, { mealsPerDay: clamp(Math.round(mealsPerDay), 1, 5) });
+    },
     setUnits(units: UnitSystem): void {
       patchState(store, { units });
     },
@@ -240,7 +246,7 @@ export const OnboardingStore = signalStore(
         targetWeightKg: store.targetWeightKg(),
         diet,
         restrictions: store.restrictions(),
-        mealsPerDay: 4,
+        mealsPerDay: store.mealsPerDay(),
         units: store.units(),
       };
     },

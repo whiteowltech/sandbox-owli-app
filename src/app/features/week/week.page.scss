@@ -1,0 +1,271 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 16px 24px 32px;
+}
+.range {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    color: var(--owli-pluma);
+    text-align: center;
+  }
+}
+.nav {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 12px;
+  background: var(--owli-corteza);
+  color: var(--owli-luna);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:disabled {
+    opacity: 0.35;
+  }
+}
+.err {
+  margin: 0;
+  color: var(--owli-ojo);
+}
+.retry,
+.toggle {
+  align-self: flex-start;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--owli-ojo);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+}
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: opacity var(--owli-dur) var(--owli-ease);
+
+  &.loading {
+    opacity: 0.5;
+  }
+  owli-owl {
+    flex-shrink: 0;
+  }
+  h2 {
+    margin: 0;
+    font-size: 21px;
+    line-height: 1.2;
+    font-weight: 800;
+  }
+  p {
+    margin: 6px 0 0;
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--owli-pluma);
+  }
+  .streak {
+    color: var(--owli-liquen);
+    font-weight: 700;
+  }
+}
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+.day {
+  height: 72px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: #22332d;
+  color: var(--owli-luna);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+
+  // Día cerrado: borde verde (además del estado en el texto accesible).
+  &.closed {
+    border-color: var(--owli-liquen);
+  }
+  &.empty {
+    opacity: 0.55;
+  }
+  &[aria-pressed='true'] {
+    border-color: var(--owli-ojo);
+  }
+}
+.detail {
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #22332d;
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--owli-pluma);
+  }
+  .detail-title {
+    margin-bottom: 4px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--owli-luna);
+  }
+}
+.chart {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  h2 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 700;
+  }
+  header span {
+    font-size: 14px;
+    color: var(--owli-texto-terciario);
+  }
+}
+.plot {
+  position: relative;
+  height: 148px;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+  align-items: end;
+  border-bottom: 1px solid var(--owli-corteza-alta);
+
+  &.short {
+    height: 116px;
+  }
+}
+// Línea del objetivo, recesiva: punteada y gris.
+.target {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1.5px dashed #8a9a91;
+  pointer-events: none;
+
+  span {
+    position: absolute;
+    right: 0;
+    bottom: 2px;
+    padding-left: 4px;
+    background: var(--owli-pino);
+    font-size: 12px;
+    color: var(--owli-texto-terciario);
+  }
+}
+.col {
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transition: opacity var(--owli-dur-rapida) var(--owli-ease);
+
+  &.dim {
+    opacity: 0.4;
+  }
+}
+// Barras finas con la punta redondeada; el texto nunca usa el color de la serie.
+.bar {
+  display: block;
+  width: 60%;
+  max-width: 28px;
+  border-radius: 4px 4px 0 0;
+
+  &.kcal {
+    background: var(--owli-luna);
+  }
+  &.protein {
+    background: var(--owli-ojo);
+  }
+  // Hoy todavía no terminó: la barra va atenuada.
+  &.today {
+    opacity: 0.5;
+  }
+}
+.axis {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+  margin-top: -4px;
+
+  span {
+    text-align: center;
+    font-size: 12px;
+    color: var(--owli-texto-terciario);
+  }
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #22332d;
+  font-size: 15px;
+
+  caption {
+    padding-bottom: 8px;
+    text-align: left;
+    font-size: 14px;
+    color: var(--owli-texto-terciario);
+  }
+  th,
+  td {
+    padding: 10px 12px;
+    text-align: right;
+  }
+  th[scope='row'],
+  th:first-child {
+    text-align: left;
+    font-weight: 500;
+  }
+  thead th {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--owli-pluma);
+  }
+  tbody tr {
+    border-top: 1px solid #2e4139;
+  }
+}
+.note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--owli-texto-terciario);
+}
+@media (prefers-reduced-motion: reduce) {
+  .summary,
+  .col {
+    transition: none;
+  }
+}

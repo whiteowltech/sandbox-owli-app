@@ -172,7 +172,9 @@
     "readyNamed": "All set, {{name}}. You can start your day.",
     "gift": "Your first 15 AI analyses are on us. Logging by hand is always free.",
     "later": "The rest (meals per day, reminders, Apple Health) I’ll ask when it matters.",
-    "goToDay": "Go to my day"
+    "goToDay": "Go to my day",
+    "mealsLabel": "How many meals do you eat a day?",
+    "mealsHint": "Owli splits what's left across your remaining meals. You can change it in your account."
   },
   "today": {
     "title": "Today",
@@ -308,15 +310,118 @@
     }
   },
   "week": {
-    "title": "Your week"
+    "title": "Your week",
+    "range": "{{start}} to {{end}}",
+    "navAria": "Change week",
+    "previous": "Previous week",
+    "next": "Next week",
+    "error": "We couldn't load your week. Check your connection.",
+    "emptyTitle": "No logged days this week",
+    "emptyBody": "Log your meals and you'll see how each day went here.",
+    "closed": "You closed {{closed}} of {{logged}} logged days",
+    "closedOne": "You closed {{closed}} of {{logged}} logged day",
+    "comment": {
+      "proteinOne": "Protein fell short one day: prioritize it at lunch.",
+      "proteinOther": "Protein fell short {{n}} days: prioritize it at lunch.",
+      "overOne": "You went over your calories one day. One day defines nothing.",
+      "overOther": "You went over your calories {{n}} days. Check which meal ran long.",
+      "allClosed": "Every day you logged stayed on target.",
+      "keepGoing": "You're doing well: log every meal to close more days."
+    },
+    "streak": "You've logged {{n}} days in a row.",
+    "daysAria": "Days of the week",
+    "state": {
+      "closed": "day closed",
+      "open": "day not closed",
+      "empty": "nothing logged",
+      "today": "today, in progress"
+    },
+    "detail": "{{kcal}} kcal ({{dk}}) and {{p}} g of protein ({{dp}} g).",
+    "verdict": {
+      "closed": "Day closed.",
+      "open": "Not on target.",
+      "today": "The day is still going.",
+      "empty": ""
+    },
+    "kcalTitle": "Calories per day",
+    "proteinTitle": "Protein per day",
+    "avgKcal": "Average {{v}} kcal",
+    "avgProtein": "Average {{v}} g",
+    "targetKcal": "Target {{v}}",
+    "targetProtein": "Target {{v}} g",
+    "showTable": "Show as table",
+    "hideTable": "Hide table",
+    "tableCaption": "This week's calories and protein",
+    "col": {
+      "day": "Day",
+      "kcal": "kcal",
+      "protein": "Protein",
+      "closed": "Closed"
+    },
+    "closedCell": {
+      "closed": "Yes",
+      "open": "No",
+      "today": "In progress",
+      "empty": "—"
+    },
+    "note": "Averages use finished days with entries. Every day is compared with your current target."
   },
   "account": {
     "title": "Your account",
+    "targetLabel": "Your daily target",
+    "macros": "Protein {{p}} g, carbs {{c}} g, fat {{f}} g",
+    "was": "Before: {{v}} kcal",
+    "planTitle": "Your plan",
+    "sections": {
+      "body": "Your body",
+      "goal": "Goal",
+      "diet": "Diet",
+      "meals": "Meals per day",
+      "name": "Name"
+    },
+    "mealsOne": "1 meal",
+    "mealsOther": "{{n}} meals",
+    "mealsHint": {
+      "1": "One meal a day (OMAD): Owli suggests covering everything at once.",
+      "2": "Two meals, for example lunch and dinner.",
+      "3": "Three meals: breakfast, lunch and dinner.",
+      "4": "Four meals: breakfast, lunch, an afternoon snack and dinner.",
+      "5": "Five meals: the usual four plus a snack."
+    },
+    "mealsWhy": "Owli splits what's left of your day across the meals you have left. If you do intermittent fasting, pick fewer meals.",
+    "noName": "No name",
+    "discard": "Discard",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "fixErrors": "Fix what is marked to save.",
+    "saved": {
+      "saved": "Done: your plan is updated.",
+      "pending": "Saved on this phone. It will sync to your account when you are back online."
+    },
+    "creditsTitle": "AI analyses",
+    "creditsLeft": "{{n}} left",
+    "creditsLoading": "Loading your analyses…",
+    "bucket": {
+      "today": "Today's free",
+      "welcome": "Welcome",
+      "packs": "Purchased"
+    },
+    "creditsHow": "Each analyzed photo or recording uses 1. Today's free ones go first, then welcome ones, then purchased ones. Logging by hand is always free.",
+    "pro": "Owli Pro: unlimited analyses",
+    "proSoon": "Owli Pro and analysis packs are coming soon.",
+    "prefsTitle": "Preferences",
     "language": "Language",
+    "accountTitle": "Account",
+    "anonymous": "Your account is anonymous and tied to this phone. Soon you'll be able to link it to Apple or Google so you don't lose your data if you switch phones.",
+    "delete": "Delete my account",
+    "deleteTitle": "Delete your account?",
+    "deleteBody": "Your profile, meals and remaining analyses are deleted, on this phone and on the server. This cannot be undone.",
+    "deleteConfirm": "Delete permanently",
+    "deleting": "Deleting…",
+    "deleteFailed": "We couldn't delete your account: check your connection and try again. For now it's intact.",
     "disclaimer": "Owli is not a substitute for medical or nutritional advice. If you have a health condition, talk to a professional before changing how you eat."
   },
   "dev": {
-    "demoProfile": "Use a test profile",
-    "resetProfile": "Delete the profile and start over"
+    "demoProfile": "Use a test profile"
   }
 }
