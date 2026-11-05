@@ -31,6 +31,20 @@ export class SuggestionsSheetComponent {
   });
   protected readonly hidden = computed(() => (this.store.closing()?.dishes.length ?? 0) - this.dishes().length);
 
+  /** Por qué la lista es como es: macros del día ya pasados y acompañamientos. */
+  protected readonly notes = computed(() => {
+    const c = this.store.closing();
+    if (!c) return [];
+    const out: { key: string; g?: number }[] = [];
+    // `over` puede faltar si la app se publica antes que la API que lo envía.
+    const fat = c.over?.fatG ?? 0;
+    const carbs = c.over?.carbsG ?? 0;
+    if (fat >= 1) out.push({ key: 'today.closing.overFat', g: Math.round(fat) });
+    if (carbs >= 1) out.push({ key: 'today.closing.overCarbs', g: Math.round(carbs) });
+    if (c.dishes[0]?.side) out.push({ key: 'today.closing.sidesHint' });
+    return out;
+  });
+
   protected dishName(d: Dish): string {
     return this.lang() === 'en' ? d.nameEn : d.nameEs;
   }

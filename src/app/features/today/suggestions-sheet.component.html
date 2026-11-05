@@ -25,8 +25,13 @@
           }}
           @if (c.mealsLeft > 1) {
             {{ 'today.closing.split' | transloco: { n: c.mealsLeft } }}
+          } @else {
+            {{ 'today.closing.lastNote' | transloco }}
           }
         </p>
+        @for (note of notes(); track note.key) {
+          <p class="hint note num">{{ note.key | transloco: { g: note.g } }}</p>
+        }
       }
     </div>
     <button type="button" class="close" (click)="closed.emit()">{{ 'common.cancel' | transloco }}</button>
@@ -59,6 +64,8 @@
             <h3>{{ dishName(d) }}</h3>
             @if (d.exact) {
               <span class="exact">{{ 'today.closing.exact' | transloco }}</span>
+            } @else if (d.side) {
+              <span class="side">{{ 'today.closing.side' | transloco }}</span>
             }
           </div>
           <p class="portions">

@@ -35,6 +35,7 @@ const food = (id: string): Food => ({
 const closing: Closing = {
   mealsLeft: 2,
   need: { kcal: 600, proteinG: 45, carbsG: 60, fiberG: 0, fatG: 20 },
+  over: { kcal: 0, proteinG: 0, carbsG: 0, fiberG: 0, fatG: 0 },
   netCarbs: false,
   closed: false,
   dishes: [
@@ -43,6 +44,7 @@ const closing: Closing = {
       nameEs: 'Pollo con arroz',
       nameEn: 'Chicken with rice',
       exact: true,
+      side: false,
       macros: { kcal: 598, proteinG: 45, carbsG: 60, fiberG: 1, fatG: 20 },
       portions: [
         { grams: 120, food: food('pechuga-pollo') },

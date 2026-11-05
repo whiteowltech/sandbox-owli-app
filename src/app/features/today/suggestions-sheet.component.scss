@@ -33,6 +33,15 @@
   font-weight: 700;
   color: var(--owli-liquen);
 }
+.side {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--owli-texto-terciario);
+}
+.hint.note {
+  margin-top: 6px;
+}
 .portions {
   margin: 0;
   font-size: 15px;

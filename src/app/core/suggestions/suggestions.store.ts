@@ -21,6 +21,8 @@ export interface Dish {
   nameEn: string;
   /** Cierra lo que falta dentro de ±5 % de kcal y ±5 g de proteína. */
   exact: boolean;
+  /** Acompañamiento sin fuente de proteína: fruta, arroz, pan… */
+  side: boolean;
   macros: MacrosDto;
   portions: Portion[];
 }
@@ -29,6 +31,8 @@ export interface Closing {
   mealsLeft: number;
   /** Lo que falta para esta comida; en keto, carbsG son carbos netos. */
   need: MacrosDto;
+  /** Cuánto se pasó el día de cada macro: con grasa o carbos pasados, los platos casi no suman de eso. */
+  over: MacrosDto;
   netCarbs: boolean;
   /** El día ya está cubierto: no hay platos. */
   closed: boolean;
