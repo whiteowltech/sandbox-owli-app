@@ -174,7 +174,10 @@
     "later": "Lo demás (comidas al día, recordatorios, Apple Health) te lo pregunto cuando haga falta.",
     "goToDay": "Ir a mi día",
     "mealsLabel": "¿Cuántas comidas haces al día?",
-    "mealsHint": "Owli reparte lo que te falta entre las comidas que quedan. Lo puedes cambiar en tu cuenta."
+    "mealsHint": "Owli reparte lo que te falta entre las comidas que quedan. Lo puedes cambiar en tu cuenta.",
+    "pathTitle": "Tu camino",
+    "today": "Hoy",
+    "pathAria": "De {{from}} hoy a {{to}} alrededor del {{date}}."
   },
   "today": {
     "title": "Hoy",
@@ -312,6 +315,12 @@
       "noneBody": "Con lo que falta y tu dieta, ningún plato de la lista cuadra. Puedes anotar a mano lo que comas.",
       "error": "No pudimos cargar las sugerencias. Revisa tu conexión.",
       "logError": "No se pudo anotar el plato. Inténtalo de nuevo: lo ya anotado no se repite."
+    },
+    "removed": "Borraste {{name}}.",
+    "undo": "Deshacer",
+    "celebrate": {
+      "title": "¡Día cerrado!",
+      "body": "Calorías y proteína en su lugar."
     }
   },
   "week": {

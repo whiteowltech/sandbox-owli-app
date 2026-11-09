@@ -216,3 +216,122 @@
   font-size: 15px;
   line-height: 1.45;
 }
+
+// Presentación del plan: la barra de macros se arma tramo a tramo y la curva se dibuja.
+.split {
+  display: flex;
+  gap: 2px;
+  height: 10px;
+  margin-top: 14px;
+  border-radius: 5px;
+  overflow: hidden;
+
+  .seg {
+    transform-origin: left center;
+    animation: seg-grow 500ms var(--owli-ease) both;
+  }
+}
+@keyframes seg-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+.protein {
+  background: var(--owli-ojo);
+}
+.carbs,
+.netCarbs {
+  background: var(--owli-liquen);
+}
+.fat {
+  background: var(--owli-luna-azul);
+}
+.split-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  color: var(--owli-pluma);
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  strong {
+    color: var(--owli-luna);
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+  }
+}
+.path-chart {
+  position: relative;
+  height: 96px;
+  margin: 10px 0 4px;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .goal-line {
+    stroke: var(--owli-borde);
+    stroke-width: 1;
+    stroke-dasharray: 3 4;
+    vector-effect: non-scaling-stroke;
+  }
+  .curve {
+    fill: none;
+    stroke: var(--owli-ojo);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+    stroke-dasharray: 100;
+    animation: draw 900ms 450ms var(--owli-ease) both;
+  }
+  .end-dot {
+    position: absolute;
+    right: calc(10 / 300 * 100% - 6px);
+    width: 12px;
+    height: 12px;
+    margin-top: -6px;
+    border: 2px solid var(--owli-corteza);
+    border-radius: 50%;
+    background: var(--owli-ojo);
+    animation: dot-pop 260ms 1250ms var(--owli-ease) both;
+  }
+}
+@keyframes draw {
+  from {
+    stroke-dashoffset: 100;
+  }
+}
+@keyframes dot-pop {
+  from {
+    transform: scale(0);
+  }
+}
+.path-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--owli-texto-terciario);
+
+  span {
+    display: flex;
+    flex-direction: column;
+  }
+  strong {
+    font-size: 15px;
+    color: var(--owli-luna);
+  }
+  .end {
+    align-items: flex-end;
+  }
+}

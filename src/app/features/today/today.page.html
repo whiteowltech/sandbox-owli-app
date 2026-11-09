@@ -26,14 +26,18 @@
       </nav>
     </header>
 
-    <section class="status" aria-live="polite">
-      @if (left() >= 0) {
-      <p class="label">{{ 'today.left' | transloco }}</p>
-      <p class="big num">{{ num(left()) }} <span>{{ 'common.kcal' | transloco }}</span></p>
-      } @else {
-      <p class="label">{{ 'today.over' | transloco }}</p>
-      <p class="big num">{{ num(-left()) }} <span>{{ 'common.kcal' | transloco }}</span></p>
-      }
+    <section class="status">
+      <!-- El número cuenta hasta el valor nuevo; el lector de pantalla anuncia solo el final. -->
+      <p class="sr-only" aria-live="polite">
+        {{ (left() >= 0 ? 'today.left' : 'today.over') | transloco }} {{ num(left() >= 0 ? left() : -left()) }} {{
+        'common.kcal' | transloco }}
+      </p>
+      <div aria-hidden="true">
+        <p class="label">{{ (leftShown() >= 0 ? 'today.left' : 'today.over') | transloco }}</p>
+        <p class="big num">
+          {{ num(leftShown() >= 0 ? leftShown() : -leftShown()) }} <span>{{ 'common.kcal' | transloco }}</span>
+        </p>
+      </div>
       <p class="of num">{{ 'today.eatenOf' | transloco: { eaten: num(eaten()), target: num(target()) } }}</p>
       @if (diary.day()) {
       <p class="owli-says">
@@ -62,7 +66,28 @@
         <path d="M318 100 C326 88 342 84 352 88 C346 100 332 104 318 100 Z" fill="#86B39F" />
         <path d="M352 104 C362 96 376 96 384 102 C376 112 362 112 352 104 Z" fill="#6E9C87" />
       </svg>
-      <owli-owl class="walker" [mood]="mood()" [size]="96" [decorative]="true" [style.transform]="owlPos()" />
+      <owli-owl
+        class="walker"
+        [mood]="mood()"
+        [size]="96"
+        [decorative]="true"
+        [hop]="hop()"
+        [style.transform]="owlPos()"
+      />
+      @if (celebrating()) {
+      <button
+        type="button"
+        class="celebrate"
+        animate.enter="celebrate-in"
+        animate.leave="fade-out"
+        role="status"
+        (click)="endCelebration()"
+      >
+        <span class="sparks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+        <strong>{{ 'today.celebrate.title' | transloco }}</strong>
+        <span>{{ 'today.celebrate.body' | transloco }}</span>
+      </button>
+      }
     </div>
 
     <dl class="macros">
@@ -92,7 +117,7 @@
       }
       <ul class="entries">
         @for (e of diary.entries(); track e.id) {
-        <li class="entry">
+        <li class="entry" [class.fresh]="freshIds().has(e.id)" animate.leave="entry-out">
           <div class="entry-main">
             <p class="entry-name">{{ entryName(e) }}</p>
             <p class="entry-meta num">{{ e.grams }} g · {{ time(e) }}</p>
@@ -110,6 +135,13 @@
         }
       </ul>
     </section>
+
+    @if (diary.removed(); as r) {
+    <div class="undo" role="status" animate.enter="undo-in" animate.leave="fade-out">
+      <span>{{ 'today.removed' | transloco: { name: entryName(r) } }}</span>
+      <button type="button" (click)="diary.undoRemove()">{{ 'today.undo' | transloco }}</button>
+    </div>
+    }
 
     <div class="log-actions">
       <!-- Cámara y micrófono a un toque desde que se abre la app (CLAUDE.md: ≤ 2 toques). -->
@@ -147,26 +179,50 @@
   </div>
 
   @if (analysis.phase() !== 'idle') {
-  <div class="scrim" aria-hidden="true"></div>
+  <div class="scrim" animate.enter="fade-in" animate.leave="fade-out" aria-hidden="true"></div>
   <owli-photo-review-sheet
     class="sheet-host"
+    animate.enter="sheet-in"
+    animate.leave="sheet-out"
+    owliSheetDrag
+    (dismissed)="closePhoto()"
     [lang]="lang()"
     [leftKcal]="left()"
     (closed)="onPhotoClosed()"
     (manual)="sheetOpen.set(true)"
   />
   } @if (suggestionsOpen()) {
-  <div class="scrim" (click)="suggestionsOpen.set(false)" aria-hidden="true"></div>
+  <div
+    class="scrim"
+    animate.enter="fade-in"
+    animate.leave="fade-out"
+    (click)="suggestionsOpen.set(false)"
+    aria-hidden="true"
+  ></div>
   <owli-suggestions-sheet
     class="sheet-host"
+    animate.enter="sheet-in"
+    animate.leave="sheet-out"
+    owliSheetDrag
+    (dismissed)="suggestionsOpen.set(false)"
     [lang]="lang()"
     (closed)="suggestionsOpen.set(false)"
     (manual)="suggestionsOpen.set(false); sheetOpen.set(true)"
   />
   } @if (sheetOpen() && profile.profile(); as p) {
-  <div class="scrim" (click)="sheetOpen.set(false)" aria-hidden="true"></div>
+  <div
+    class="scrim"
+    animate.enter="fade-in"
+    animate.leave="fade-out"
+    (click)="sheetOpen.set(false)"
+    aria-hidden="true"
+  ></div>
   <owli-add-food-sheet
     class="sheet-host"
+    animate.enter="sheet-in"
+    animate.leave="sheet-out"
+    owliSheetDrag
+    (dismissed)="sheetOpen.set(false)"
     [diet]="p.diet"
     [restrictions]="p.restrictions"
     [lang]="lang()"

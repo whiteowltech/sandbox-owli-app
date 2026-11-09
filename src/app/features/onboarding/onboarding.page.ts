@@ -5,11 +5,13 @@ import { IonContent } from '@ionic/angular';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { LANGS, type Lang } from '../../core/i18n/transloco';
+import { macroTargets } from '../../core/nutrition/macros';
 import { etaDate, RANGES } from '../../core/nutrition/plan';
 import { ProfileSyncService } from '../../core/profile/profile-sync.service';
 import type { ActivityLevel, Diet, Goal, Pace, Restriction, Sex } from '../../core/profile/profile.model';
 import { DEMO_PROFILE, ProfileStore } from '../../core/profile/profile.store';
 import { formatHeight, formatWeight } from '../../core/units/units';
+import { tweened } from '../../shared/motion/motion';
 import { OwlComponent } from '../../shared/owl/owl.component';
 import { StepperComponent } from '../../shared/stepper/stepper.component';
 
@@ -87,6 +89,57 @@ export class OnboardingPage {
     if (!plan) return { tdee: '', delta: '' };
     return { tdee: this.num(plan.tdee), delta: this.num(Math.abs(plan.dailyTarget - plan.tdee)) };
   });
+
+  /** Presentación del plan: las calorías cuentan desde 0 al llegar a "Listo". */
+  protected readonly targetShown = tweened(
+    () => (this.s.step() === 'ready' ? (this.s.plan()?.dailyTarget ?? 0) : 0),
+    900,
+  );
+
+  /** Reparto del objetivo: gramos de cada macro y su parte de las calorías (ancho de la barra). */
+  protected readonly split = computed(() => {
+    const plan = this.s.plan();
+    const diet = this.s.diet();
+    if (!plan || !diet) return null;
+    const t = macroTargets(plan.dailyTarget, this.s.weightKg(), this.s.goal(), diet);
+    const kcal = { protein: t.proteinG * 4, carbs: t.carbsG * 4, fat: t.fatG * 9 };
+    const total = kcal.protein + kcal.carbs + kcal.fat || 1;
+    const part = (key: string, g: number, k: number) => ({
+      key,
+      g: Math.round(g),
+      pct: ((k / total) * 100).toFixed(1),
+    });
+    return [
+      part('protein', t.proteinG, kcal.protein),
+      part(t.netCarbs ? 'netCarbs' : 'carbs', t.carbsG, kcal.carbs),
+      part('fat', t.fatG, kcal.fat),
+    ].filter((p) => p.g > 0);
+  });
+
+  /**
+   * Curva del peso de hoy al peso meta, solo para perder o ganar con una fecha posible.
+   * Es una forma ilustrativa (más rápido al principio), no un pronóstico semana a semana.
+   */
+  protected readonly projection = computed(() => {
+    const plan = this.s.plan();
+    const goal = this.s.goal();
+    if (!plan || plan.weeksToGoal == null || (goal !== 'cut' && goal !== 'bulk')) return null;
+    const [y0, y1] = goal === 'cut' ? [18, 82] : [82, 18];
+    const date = new Intl.DateTimeFormat(this.lang(), { month: 'short', year: 'numeric' }).format(
+      etaDate(plan.weeksToGoal, new Date()),
+    );
+    return {
+      path: `M10 ${y0} C110 ${y0 + (y1 - y0) * 0.75}, 190 ${y1}, 290 ${y1}`,
+      endY: y1,
+      from: this.weightText(),
+      to: this.targetText(),
+      date,
+    };
+  });
+
+  protected round(n: number): number {
+    return Math.round(n);
+  }
 
   protected num(n: number): string {
     return new Intl.NumberFormat(this.lang()).format(n);

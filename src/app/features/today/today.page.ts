@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  inject,
+  signal,
+  untracked,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { IonContent, IonIcon, type ViewWillEnter } from '@ionic/angular';
@@ -16,15 +25,23 @@ import {
 import { AnalysisStore } from '../../core/analysis/analysis.store';
 import type { Entry, OwliMood } from '../../core/diary/diary.model';
 import { DiaryStore } from '../../core/diary/diary.store';
+import { HapticsService } from '../../core/haptics/haptics.service';
 import { macroTargets } from '../../core/nutrition/macros';
 import { planFor } from '../../core/nutrition/plan';
 import { ProfileStore } from '../../core/profile/profile.store';
 import { SuggestionsStore } from '../../core/suggestions/suggestions.store';
+import { tweened } from '../../shared/motion/motion';
 import { OwlComponent } from '../../shared/owl/owl.component';
+import { SheetDragDirective } from '../../shared/sheet/sheet-drag.directive';
 
 import { AddFoodSheetComponent } from './add-food-sheet.component';
 import { PhotoReviewSheetComponent } from './photo-review-sheet.component';
 import { SuggestionsSheetComponent } from './suggestions-sheet.component';
+
+/** Cuánto dura la celebración de día cerrado si no se toca antes. */
+const CELEBRATE_MS = 2600;
+/** Lo que dura el brillo de una comida recién anotada (today.page.scss, .entry.fresh). */
+const FRESH_MS = 1600;
 
 /** Punto de la rama (misma curva que el SVG) para un avance t de 0 a 1. */
 function branchAt(t: number): { x: number; y: number } {
@@ -43,6 +60,7 @@ function branchAt(t: number): { x: number; y: number } {
     AddFoodSheetComponent,
     PhotoReviewSheetComponent,
     SuggestionsSheetComponent,
+    SheetDragDirective,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './today.page.html',
@@ -68,6 +86,8 @@ export class TodayPage implements ViewWillEnter {
   });
   protected readonly eaten = computed(() => Math.round(this.diary.eatenKcal()));
   protected readonly left = computed(() => this.target() - this.eaten());
+  /** Lo que queda, contando hacia el valor nuevo al anotar (el lector de pantalla lee solo el final). */
+  protected readonly leftShown = tweened(this.left);
   protected readonly totals = computed(
     () => this.diary.day()?.totals ?? { kcal: 0, proteinG: 0, carbsG: 0, fiberG: 0, fatG: 0 },
   );
@@ -128,8 +148,73 @@ export class TodayPage implements ViewWillEnter {
     return text.charAt(0).toUpperCase() + text.slice(1);
   });
 
+  private readonly haptics = inject(HapticsService);
+  /** Comidas que aparecieron en esta visita (se resaltan un momento) y saltos de Owli. */
+  protected readonly freshIds = signal<ReadonlySet<string>>(new Set());
+  protected readonly hop = signal(0);
+  /** Día cerrado recién ahora (no al abrir la app con el día ya cerrado). */
+  protected readonly celebrating = signal(false);
+  private seenIds: Set<string> | null = null;
+  private lastMood: OwliMood | null = null;
+  private celebrateTimer: ReturnType<typeof setTimeout> | undefined;
+  private freshTimer: ReturnType<typeof setTimeout> | undefined;
+
   constructor() {
     addIcons({ barChartOutline, personCircleOutline, searchOutline, closeOutline, cameraOutline, micOutline });
+
+    // Comida nueva (a mano, por foto, por voz o sugerida): se resalta y Owli salta.
+    effect(() => {
+      const day = this.diary.day();
+      if (!day) return;
+      const ids = day.entries.map((e) => e.id);
+      untracked(() => {
+        if (this.seenIds === null) {
+          this.seenIds = new Set(ids);
+          return;
+        }
+        const fresh = ids.filter((id) => !this.seenIds!.has(id));
+        fresh.forEach((id) => this.seenIds!.add(id));
+        if (fresh.length === 0) return;
+        this.freshIds.set(new Set(fresh));
+        clearTimeout(this.freshTimer);
+        this.freshTimer = setTimeout(() => this.freshIds.set(new Set()), FRESH_MS);
+        this.hop.update((n) => n + 1);
+        this.haptics.tap();
+      });
+    });
+
+    // Cerrar el día: una sola celebración, corta y que se salta con un toque.
+    effect(() => {
+      const mood = this.diary.day()?.mood;
+      if (!mood) return;
+      untracked(() => {
+        if (mood === 'satisfied' && this.lastMood !== null && this.lastMood !== 'satisfied') this.celebrate();
+        this.lastMood = mood;
+      });
+    });
+
+    inject(DestroyRef).onDestroy(() => {
+      clearTimeout(this.celebrateTimer);
+      clearTimeout(this.freshTimer);
+    });
+  }
+
+  private celebrate(): void {
+    this.celebrating.set(true);
+    this.hop.update((n) => n + 1);
+    this.haptics.success();
+    clearTimeout(this.celebrateTimer);
+    this.celebrateTimer = setTimeout(() => this.celebrating.set(false), CELEBRATE_MS);
+  }
+
+  protected endCelebration(): void {
+    clearTimeout(this.celebrateTimer);
+    this.celebrating.set(false);
+  }
+
+  protected closePhoto(): void {
+    this.analysis.close();
+    this.onPhotoClosed();
   }
 
   ionViewWillEnter(): void {

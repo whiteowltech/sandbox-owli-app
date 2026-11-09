@@ -7,15 +7,42 @@ import { API_URL } from '../api/api-url';
 import { AuthService } from '../auth/auth.service';
 import { ProfileSyncService } from '../profile/profile-sync.service';
 
-import type { Day, Entry, Food } from './diary.model';
+import type { Day, Entry, Food, MacrosDto } from './diary.model';
 
 export type DiaryError = 'offline' | 'unknown';
+
+/** Cuánto tiempo se ofrece "Deshacer" después de borrar una comida. */
+export const UNDO_MS = 5000;
 
 interface DiaryState {
   day: Day | null;
   loading: boolean;
   saving: boolean;
   error: DiaryError | null;
+  /** Comida borrada que todavía se puede recuperar con "Deshacer". */
+  removed: Entry | null;
+}
+
+function plus(a: MacrosDto, b: MacrosDto, sign = 1): MacrosDto {
+  return {
+    kcal: a.kcal + sign * b.kcal,
+    proteinG: a.proteinG + sign * b.proteinG,
+    carbsG: a.carbsG + sign * b.carbsG,
+    fiberG: a.fiberG + sign * b.fiberG,
+    fatG: a.fatG + sign * b.fatG,
+  };
+}
+
+/** El día con la comida de vuelta, en su lugar según la hora. */
+function withEntry(day: Day, e: Entry): Day {
+  const entries = [...day.entries, e].sort((a, b) => a.eatenAt.localeCompare(b.eatenAt));
+  return { ...day, entries, totals: plus(day.totals, e.macros) };
+}
+
+/** El día sin la comida borrada: ni en la lista ni en los totales. */
+function without(day: Day, e: Entry | null): Day {
+  if (!e || !day.entries.some((x) => x.id === e.id)) return day;
+  return { ...day, entries: day.entries.filter((x) => x.id !== e.id), totals: plus(day.totals, e.macros, -1) };
 }
 
 function classify(err: unknown): DiaryError {
@@ -28,7 +55,7 @@ function classify(err: unknown): DiaryError {
  */
 export const DiaryStore = signalStore(
   { providedIn: 'root' },
-  withState<DiaryState>({ day: null, loading: false, saving: false, error: null }),
+  withState<DiaryState>({ day: null, loading: false, saving: false, error: null, removed: null }),
   withComputed(({ day }) => ({
     entries: computed<Entry[]>(() => day()?.entries ?? []),
     eatenKcal: computed(() => day()?.totals.kcal ?? 0),
@@ -52,6 +79,14 @@ export const DiaryStore = signalStore(
           }
           throw err;
         }
+      }
+
+      let undoTimer: ReturnType<typeof setTimeout> | undefined;
+
+      /** Deja de ofrecer "Deshacer". */
+      function forgetRemoved(): void {
+        clearTimeout(undoTimer);
+        patchState(store, { removed: null });
       }
 
       return {
@@ -87,24 +122,61 @@ export const DiaryStore = signalStore(
           }
         },
 
-        /** Borra una comida. Se quita al instante y vuelve si el servidor falla. */
+        /**
+         * Borra una comida: se quita al instante, se borra en el servidor y durante
+         * UNDO_MS se ofrece "Deshacer". Si el servidor falla, la comida vuelve.
+         */
         async remove(entryId: string): Promise<void> {
           const before = store.day();
-          if (!before) return;
-          patchState(store, {
-            day: { ...before, entries: before.entries.filter((e) => e.id !== entryId) },
-            error: null,
-          });
+          const e = before?.entries.find((x) => x.id === entryId);
+          if (!before || !e) return;
+          clearTimeout(undoTimer);
+          patchState(store, { day: without(before, e), removed: e, error: null });
           try {
-            await firstValueFrom(http.delete(`${api}/v1/me/entries/${encodeURIComponent(entryId)}`));
+            await firstValueFrom(http.delete(`${api}/v1/me/entries/${encodeURIComponent(e.id)}`));
+          } catch (err) {
+            const d = store.day();
+            patchState(store, { day: d && withEntry(d, e), removed: null, error: classify(err) });
+            return;
+          }
+          if (store.removed() === e) undoTimer = setTimeout(forgetRemoved, UNDO_MS);
+          // El ánimo de Owli y los totales exactos los recalcula el servidor.
+          try {
+            patchState(store, { day: await fetchDay() });
+          } catch {
+            // El borrado ya quedó hecho; el día se actualiza en la próxima carga.
+          }
+        },
+
+        /**
+         * Vuelve a anotar la comida recién borrada, con su hora y su origen (un análisis
+         * de IA deshecho no se cobra de nuevo: se anota como estaba).
+         */
+        async undoRemove(): Promise<void> {
+          const e = store.removed();
+          const d = store.day();
+          if (!e || !d) return;
+          forgetRemoved();
+          patchState(store, { day: withEntry(d, e), error: null });
+          try {
+            await firstValueFrom(
+              http.post<Entry>(`${api}/v1/me/entries`, {
+                foodId: e.foodId,
+                grams: e.grams,
+                eatenAt: e.eatenAt,
+                source: e.source,
+              }),
+            );
             patchState(store, { day: await fetchDay() });
           } catch (err) {
-            patchState(store, { day: before, error: classify(err) });
+            const now = store.day();
+            patchState(store, { day: now && without(now, e), error: classify(err) });
           }
         },
 
         clear(): void {
-          patchState(store, { day: null, error: null });
+          clearTimeout(undoTimer);
+          patchState(store, { day: null, error: null, removed: null });
         },
       };
     },

@@ -294,14 +294,139 @@
     font-size: 22px;
   }
 }
-.scrim {
-  position: absolute;
-  inset: 0;
-  background: rgba(12, 19, 17, 0.66);
+
+// Comida recién anotada: un brillo ámbar que se apaga solo. Marca qué cambió.
+.entry.fresh {
+  animation: entry-fresh 1600ms ease-in;
 }
-.sheet-host {
+@keyframes entry-fresh {
+  from {
+    box-shadow: inset 0 0 0 2px var(--owli-ojo);
+    background: #34331f;
+  }
+}
+.entry.entry-out {
+  animation: entry-out var(--owli-dur) var(--owli-ease) forwards;
+}
+@keyframes entry-out {
+  to {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+}
+
+// Deshacer un borrado: aparece sobre los botones de registro durante unos segundos.
+.undo {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 4px 4px 4px 16px;
+  border-radius: 14px;
+  background: var(--owli-corteza-alta);
+  font-size: 15px;
+
+  span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  button {
+    flex-shrink: 0;
+    height: 44px;
+    padding: 0 14px;
+    border: 0;
+    background: transparent;
+    color: var(--owli-ojo);
+    font: inherit;
+    font-weight: 800;
+  }
+}
+.undo-in {
+  animation: undo-in var(--owli-dur) var(--owli-ease);
+}
+@keyframes undo-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+// Día cerrado: un cartel junto a Owli y unas chispas. Un toque lo cierra antes.
+.celebrate {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 6px;
+  right: 24px;
+  max-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 10px 14px;
+  border: 2px solid var(--owli-liquen);
+  border-radius: 16px 16px 16px 6px;
+  background: var(--owli-corteza);
+  color: var(--owli-luna);
+  font: inherit;
+  text-align: left;
+
+  strong {
+    font-size: 17px;
+  }
+  > span:last-child {
+    font-size: 14px;
+    color: var(--owli-pluma);
+  }
+}
+.celebrate-in {
+  animation: celebrate-in 320ms var(--owli-ease);
+}
+@keyframes celebrate-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.92);
+  }
+}
+.sparks {
+  position: absolute;
+  left: -14px;
+  bottom: -10px;
+  width: 0;
+  height: 0;
+
+  i {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    background: var(--owli-ojo);
+    opacity: 0;
+    animation: spark 700ms var(--owli-ease) forwards;
+
+    &:nth-child(2n) {
+      background: var(--owli-liquen);
+    }
+    &:nth-child(3n) {
+      background: var(--owli-luna-azul);
+    }
+    @for $i from 1 through 6 {
+      &:nth-child(#{$i}) {
+        --a: #{($i - 1) * 60 - 30}deg;
+        animation-delay: #{($i - 1) * 25}ms;
+      }
+    }
+  }
+}
+@keyframes spark {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--a)) translateX(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateX(42px) scale(0.4);
+  }
 }

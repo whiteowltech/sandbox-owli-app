@@ -109,11 +109,48 @@ describe('DiaryStore', () => {
 
     const removing = diary.remove('e-1');
     expect(diary.entries().length).toBe(0); // se quita sin esperar al servidor
+    expect(diary.eatenKcal()).toBe(0); // y los totales también
     await tick();
     backend.expectOne({ method: 'DELETE', url: `${API}/v1/me/entries/e-1` }).error(new ProgressEvent('error'));
     await removing;
     expect(diary.entries().length).toBe(1);
+    expect(diary.eatenKcal()).toBe(330);
+    expect(diary.removed()).toBeNull(); // no se ofrece deshacer algo que no se borró
     expect(diary.error()).toBe('offline');
+  });
+
+  it('deshacer vuelve a anotar la comida con su hora y su origen', async () => {
+    const { diary, backend } = setup();
+    const loading = diary.load();
+    await tick();
+    const photo = { ...entry('e-1'), source: 'photo' };
+    backend.expectOne(`${API}/v1/me/day`).flush(day(330, [photo]));
+    await loading;
+
+    const removing = diary.remove('e-1');
+    await tick();
+    backend.expectOne({ method: 'DELETE', url: `${API}/v1/me/entries/e-1` }).flush(null);
+    await tick();
+    backend.expectOne(`${API}/v1/me/day`).flush(day(0));
+    await removing;
+    expect(diary.removed()?.id).toBe('e-1');
+
+    const undoing = diary.undoRemove();
+    expect(diary.entries().length).toBe(1); // vuelve al instante
+    expect(diary.removed()).toBeNull();
+    await tick();
+    const post = backend.expectOne({ method: 'POST', url: `${API}/v1/me/entries` });
+    expect(post.request.body).toEqual({
+      foodId: 'pechuga-pollo',
+      grams: 200,
+      eatenAt: '2026-11-03T15:00:00Z',
+      source: 'photo',
+    });
+    post.flush({ ...photo, id: 'e-2' });
+    await tick();
+    backend.expectOne(`${API}/v1/me/day`).flush(day(330, [{ ...photo, id: 'e-2' }]));
+    await undoing;
+    expect(diary.entries().map((e) => e.id)).toEqual(['e-2']);
   });
 
   it('sin conexión, anotar falla sin perder el día cargado', async () => {

@@ -174,7 +174,10 @@
     "later": "The rest (meals per day, reminders, Apple Health) I’ll ask when it matters.",
     "goToDay": "Go to my day",
     "mealsLabel": "How many meals do you eat a day?",
-    "mealsHint": "Owli splits what's left across your remaining meals. You can change it in your account."
+    "mealsHint": "Owli splits what's left across your remaining meals. You can change it in your account.",
+    "pathTitle": "Your path",
+    "today": "Today",
+    "pathAria": "From {{from}} today to {{to}} around {{date}}."
   },
   "today": {
     "title": "Today",
@@ -312,6 +315,12 @@
       "noneBody": "With what you need and your diet, no dish on the list works. You can log what you eat by hand.",
       "error": "We couldn't load the suggestions. Check your connection.",
       "logError": "The dish couldn't be logged. Try again: what was already logged won't repeat."
+    },
+    "removed": "Removed {{name}}.",
+    "undo": "Undo",
+    "celebrate": {
+      "title": "Day closed!",
+      "body": "Calories and protein on target."
     }
   },
   "week": {

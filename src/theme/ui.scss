@@ -210,3 +210,84 @@
   border-radius: 22px;
   font-size: 15px;
 }
+
+/* Respuesta al toque: todo lo que se presiona se hunde un poco. */
+button,
+a,
+label.cta {
+  -webkit-tap-highlight-color: transparent;
+}
+button:not(:disabled):active,
+a:active,
+label.cta:active {
+  transform: scale(0.97);
+  transition: transform var(--owli-dur-rapida) var(--owli-ease);
+}
+
+/* Hojas inferiores: el fondo se oscurece y la hoja sube; al cerrar, al revés.
+   Se usan con animate.enter / animate.leave y la directiva owliSheetDrag. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(12, 19, 17, 0.66);
+}
+.sheet-host {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  touch-action: pan-y;
+
+  header {
+    touch-action: none; // arrastrar desde el encabezado mueve la hoja, no la lista
+  }
+  .grab {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 22px;
+    touch-action: none;
+    cursor: grab;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 7px;
+      left: 50%;
+      width: 36px;
+      height: 5px;
+      margin-left: -18px;
+      border-radius: 3px;
+      background: var(--owli-borde);
+    }
+  }
+}
+.fade-in {
+  animation: owli-fade-in var(--owli-dur) var(--owli-ease);
+}
+.fade-out {
+  animation: owli-fade-in var(--owli-dur) var(--owli-ease) reverse forwards;
+}
+.sheet-in {
+  animation: owli-sheet-in 280ms var(--owli-ease);
+}
+.sheet-out {
+  animation: owli-sheet-out var(--owli-dur) cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+@keyframes owli-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes owli-sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes owli-sheet-out {
+  to {
+    transform: translateY(100%);
+  }
+}

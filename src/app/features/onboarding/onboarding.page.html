@@ -321,7 +321,7 @@
       @case ('ready') {
       <main class="ready">
         <div class="ready-head">
-          <owli-owl mood="satisfied" [size]="96" />
+          <owli-owl mood="satisfied" [size]="96" [hop]="1" />
           <p class="bubble">
             @if (s.greetingName()) { {{ 'onboarding.readyNamed' | transloco: { name: s.greetingName() } }} } @else { {{
             'onboarding.ready' | transloco }} }
@@ -330,11 +330,50 @@
         @if (s.plan(); as plan) {
         <section class="target solid">
           <p class="field-label">{{ 'onboarding.targetLabel' | transloco }}</p>
-          <p class="big num">{{ num(plan.dailyTarget) }} <span>{{ 'common.kcal' | transloco }}</span></p>
+          <p class="sr-only">{{ num(plan.dailyTarget) }} {{ 'common.kcal' | transloco }}</p>
+          <p class="big num" aria-hidden="true">
+            {{ num(round(targetShown())) }} <span>{{ 'common.kcal' | transloco }}</span>
+          </p>
           <p class="hint">
             {{ 'onboarding.goals.' + s.goal() + '.label' | transloco }} · {{ 'onboarding.diets.' + s.diet() + '.label' |
             transloco }} @for (r of s.restrictions(); track r) { · {{ 'onboarding.restrictions.' + r | transloco }} }
           </p>
+          @if (split(); as parts) {
+          <div class="split" aria-hidden="true">
+            @for (p of parts; track p.key; let i = $index) {
+            <span
+              [class]="'seg ' + p.key"
+              [style.flex-basis.%]="p.pct"
+              [style.animation-delay.ms]="300 + i * 120"
+            ></span>
+            }
+          </div>
+          <ul class="split-legend">
+            @for (p of parts; track p.key) {
+            <li>
+              <span [class]="'dot ' + p.key" aria-hidden="true"></span>
+              {{ 'today.macros.' + p.key | transloco }} <strong class="num">{{ num(p.g) }} g</strong>
+            </li>
+            }
+          </ul>
+          }
+        </section>
+        } @if (projection(); as pr) {
+        <section class="target solid path">
+          <p class="field-label">{{ 'onboarding.pathTitle' | transloco }}</p>
+          <p class="sr-only">{{ 'onboarding.pathAria' | transloco: { from: pr.from, to: pr.to, date: etaText() } }}</p>
+          <div class="path-chart" aria-hidden="true">
+            <svg viewBox="0 0 300 100" preserveAspectRatio="none">
+              <line x1="10" x2="290" [attr.y1]="pr.endY" [attr.y2]="pr.endY" class="goal-line" />
+              <path [attr.d]="pr.path" pathLength="100" class="curve" />
+            </svg>
+            <span class="end-dot" [style.top.%]="pr.endY"></span>
+          </div>
+          <div class="path-labels num" aria-hidden="true">
+            <span><strong>{{ pr.from }}</strong>{{ 'onboarding.today' | transloco }}</span>
+            <span class="end"><strong>{{ pr.to }}</strong>{{ pr.date }}</span>
+          </div>
+          <p class="hint">{{ 'onboarding.etaHonest' | transloco }}</p>
         </section>
         }
         <p class="gift">{{ 'onboarding.gift' | transloco }}</p>
