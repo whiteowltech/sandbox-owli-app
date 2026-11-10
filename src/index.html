@@ -20,9 +20,176 @@
     <!-- add to homescreen for ios -->
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="preload" as="image" href="assets/owli/owli-energetic.png" />
+    <!--
+      Presentación al abrir la app. Vive aquí (y no en Angular) para dibujarse apenas
+      llega el HTML, mientras carga el resto. La quita core/splash/splash.ts cuando la
+      app ya está lista y la secuencia terminó. Colores: tokens de theme/variables.scss.
+    -->
+    <style>
+      #owli-splash {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        background: #1b2a26;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+      #owli-splash .stage {
+        position: relative;
+        width: 168px;
+        height: 168px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+      }
+      /* La luna: un disco plano (mismo estilo que Owli) que sale detrás de él. */
+      #owli-splash .moon {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 200px;
+        height: 200px;
+        margin: -104px 0 0 -100px;
+        border-radius: 50%;
+        background: #26372f;
+        animation: owli-moon 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+      #owli-splash img {
+        position: relative;
+        height: 150px;
+        width: auto;
+        transform-origin: 50% 100%;
+        animation: owli-land 620ms 120ms
+          linear(0, 0.22 8%, 0.6 18%, 0.9 30%, 1.04 42%, 1.06 50%, 1.03 62%, 1 76%, 0.995 88%, 1) both;
+      }
+      #owli-splash .name {
+        margin: 0;
+        font-family: 'Atkinson Hyperlegible Next', system-ui, sans-serif;
+        font-size: 34px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: #eee8da;
+        animation: owli-name 420ms 460ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+      /* Hojas: al aterrizar Owli, la rama suelta unas pocas. Caen balanceándose y se apagan. */
+      #owli-splash .leaf {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 26px;
+        height: 14px;
+        z-index: 1; /* por delante de Owli */
+        margin: -7px 0 0 -13px;
+        opacity: 0;
+        animation: owli-fall var(--d, 1000ms) var(--t, 420ms) cubic-bezier(0.45, 0, 0.55, 1) both;
+      }
+      #owli-splash .leaf svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        animation: owli-sway calc(var(--d, 1000ms) / 2) var(--t, 420ms) ease-in-out 2 alternate both;
+      }
+      @keyframes owli-fall {
+        0% {
+          opacity: 0;
+          transform: translate(var(--x), var(--y)) rotate(var(--r));
+        }
+        12% {
+          opacity: 1;
+        }
+        70% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          transform: translate(calc(var(--x) + var(--dx)), calc(var(--y) + 190px)) rotate(calc(var(--r) + 50deg));
+        }
+      }
+      @keyframes owli-sway {
+        from {
+          transform: translateX(-9px) rotate(-18deg);
+        }
+        to {
+          transform: translateX(9px) rotate(18deg);
+        }
+      }
+      #owli-splash.out {
+        animation: owli-out 320ms cubic-bezier(0.4, 0, 1, 1) forwards;
+        pointer-events: none;
+      }
+      #owli-splash.out img {
+        animation: owli-up 320ms cubic-bezier(0.4, 0, 1, 1) forwards;
+      }
+      @keyframes owli-moon {
+        from {
+          opacity: 0;
+          transform: scale(0.6);
+        }
+      }
+      @keyframes owli-land {
+        from {
+          opacity: 0;
+          transform: translateY(-36px) scale(0.92, 1.06);
+        }
+        20% {
+          opacity: 1;
+        }
+      }
+      @keyframes owli-name {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+      }
+      @keyframes owli-out {
+        to {
+          opacity: 0;
+        }
+      }
+      @keyframes owli-up {
+        to {
+          transform: scale(1.08);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #owli-splash *,
+        #owli-splash.out img {
+          animation: none !important;
+        }
+      }
+    </style>
   </head>
 
   <body>
+    <div id="owli-splash" aria-hidden="true">
+      <div class="stage">
+        <div class="moon"></div>
+        <span class="leaf" style="--x: -64px; --y: -30px; --r: -20deg; --dx: -26px; --t: 400ms; --d: 1050ms"
+          ><svg viewBox="0 0 34 16" aria-hidden="true">
+            <path d="M0 12 C8 0 24 -4 34 0 C28 12 14 16 0 12 Z" fill="#86b39f" /></svg
+        ></span>
+        <span class="leaf" style="--x: 58px; --y: -48px; --r: 30deg; --dx: 22px; --t: 460ms; --d: 980ms"
+          ><svg viewBox="0 0 34 16" aria-hidden="true">
+            <path d="M0 12 C8 0 24 -4 34 0 C28 12 14 16 0 12 Z" fill="#6e9c87" /></svg
+        ></span>
+        <span class="leaf" style="--x: -24px; --y: -64px; --r: 160deg; --dx: -10px; --t: 520ms; --d: 1000ms"
+          ><svg viewBox="0 0 34 16" aria-hidden="true">
+            <path d="M0 12 C8 0 24 -4 34 0 C28 12 14 16 0 12 Z" fill="#6e9c87" /></svg
+        ></span>
+        <span class="leaf" style="--x: 84px; --y: 4px; --r: 200deg; --dx: 18px; --t: 440ms; --d: 900ms"
+          ><svg viewBox="0 0 34 16" aria-hidden="true">
+            <path d="M0 12 C8 0 24 -4 34 0 C28 12 14 16 0 12 Z" fill="#86b39f" /></svg
+        ></span>
+        <img src="assets/owli/owli-energetic.png" alt="" draggable="false" />
+      </div>
+      <p class="name">Owli</p>
+    </div>
     <owli-root></owli-root>
   </body>
 </html>

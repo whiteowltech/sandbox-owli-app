@@ -15,6 +15,12 @@ import { prefersReducedMotion } from '../motion/motion';
 /** Estados de ánimo de Owli: los mismos que OwliMood en el dominio del backend. */
 export type OwliMood = 'energetic' | 'neutral' | 'tired' | 'satisfied';
 
+/**
+ * Escenas: Owli haciendo algo (generadas con IA a partir de los 4 estados, ver
+ * escenas-owli.md). Cuando hay escena, reemplaza a la imagen del ánimo.
+ */
+export type OwliScene = 'closed' | 'no-credits' | 'night' | 'week' | 'water' | 'micros';
+
 /** Salto corto: sube, se estira y cae con un pequeño aplastón. */
 const HOP: Keyframe[] = [
   { transform: 'translateY(0) scale(1, 1)' },
@@ -25,10 +31,8 @@ const HOP: Keyframe[] = [
 ];
 
 /**
- * Owli ilustrado. Por ahora es una imagen por estado de ánimo: al cambiar de ánimo
- * una se funde en la otra, y `hop` lo hace saltar (sube el número para que salte).
- * Cuando exista la versión animada (Rive, ver pendientes.md) se reemplaza aquí sin
- * tocar las pantallas.
+ * Owli ilustrado: una imagen por estado de ánimo o por escena. Al cambiar, una se
+ * funde en la otra, y `hop` lo hace saltar (sube el número para que salte).
  */
 @Component({
   selector: 'owli-owl',
@@ -44,7 +48,7 @@ const HOP: Keyframe[] = [
           [src]="'assets/owli/owli-' + m.key + '.png'"
           [width]="size()"
           [height]="size()"
-          [attr.alt]="decorative() ? '' : ('owli.mood.' + m.key | transloco)"
+          [attr.alt]="decorative() ? '' : (m.alt | transloco)"
           [attr.aria-hidden]="decorative() || null"
           draggable="false"
         />
@@ -84,14 +88,21 @@ const HOP: Keyframe[] = [
 })
 export class OwlComponent {
   readonly mood = input<OwliMood>('neutral');
+  /** Escena en lugar del ánimo (festejo, sin análisis…); null muestra el ánimo. */
+  readonly scene = input<OwliScene | null>(null);
   readonly size = input(96);
   /** true cuando el texto al lado ya dice lo mismo: el lector de pantalla lo omite. */
   readonly decorative = input(false);
   /** Cada vez que cambia (y no es 0), Owli salta: al guardar una comida, al cerrar el día. */
   readonly hop = input(0);
 
-  /** Una sola imagen; al cambiar el ánimo se reemplaza (y se funde) gracias al `track`. */
-  protected readonly moods = computed(() => [{ key: this.mood() }]);
+  /** Una sola imagen; al cambiar el ánimo o la escena se reemplaza (y se funde) gracias al `track`. */
+  protected readonly moods = computed(() => {
+    const scene = this.scene();
+    return scene
+      ? [{ key: scene, alt: `owli.scene.${scene}` }]
+      : [{ key: this.mood(), alt: `owli.mood.${this.mood()}` }];
+  });
   private readonly body = viewChild.required<ElementRef<HTMLElement>>('body');
 
   constructor() {

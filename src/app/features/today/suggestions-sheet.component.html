@@ -58,8 +58,8 @@
       <p class="err" role="alert">{{ 'today.closing.logError' | transloco }}</p>
     }
     <ul class="dishes">
-      @for (d of dishes(); track d.id) {
-        <li class="dish">
+      @for (d of dishes(); track d.id; let i = $index) {
+        <li class="dish" [style.--i]="i">
           <div class="dish-head">
             <h3>{{ dishName(d) }}</h3>
             @if (d.exact) {

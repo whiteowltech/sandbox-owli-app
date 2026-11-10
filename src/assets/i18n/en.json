@@ -13,6 +13,14 @@
       "neutral": "Owli, calm",
       "tired": "Owli, tired",
       "satisfied": "Owli, satisfied"
+    },
+    "scene": {
+      "closed": "Owli celebrating",
+      "no-credits": "Owli, calm, with open wings",
+      "night": "Owli sleeping",
+      "week": "Owli with a clipboard",
+      "water": "Owli holding a glass of water",
+      "micros": "Owli looking through a magnifying glass"
     }
   },
   "onboarding": {

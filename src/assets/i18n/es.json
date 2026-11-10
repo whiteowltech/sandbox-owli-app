@@ -13,6 +13,14 @@
       "neutral": "Owli, tranquilo",
       "tired": "Owli, cansado",
       "satisfied": "Owli, satisfecho"
+    },
+    "scene": {
+      "closed": "Owli festejando",
+      "no-credits": "Owli, tranquilo, con las alas abiertas",
+      "night": "Owli durmiendo",
+      "week": "Owli con su planilla",
+      "water": "Owli con un vaso de agua",
+      "micros": "Owli mirando con una lupa"
     }
   },
   "onboarding": {

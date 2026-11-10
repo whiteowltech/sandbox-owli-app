@@ -5,6 +5,7 @@ import { AnalysisStore, type DraftItem } from '../../core/analysis/analysis.stor
 import { DeviceSpeech } from '../../core/analysis/speech';
 import type { Food } from '../../core/diary/diary.model';
 import { DiaryStore } from '../../core/diary/diary.store';
+import { OwlComponent } from '../../shared/owl/owl.component';
 
 /** Textos que cambian entre foto y voz; el resto se comparte. */
 const VOICE_KEYS = new Set([
@@ -24,7 +25,7 @@ const VOICE_KEYS = new Set([
  */
 @Component({
   selector: 'owli-photo-review-sheet',
-  imports: [TranslocoPipe],
+  imports: [TranslocoPipe, OwlComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './photo-review-sheet.component.html',
   styleUrls: ['./add-food-sheet.component.scss', './photo-review-sheet.component.scss'],

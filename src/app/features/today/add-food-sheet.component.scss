@@ -5,8 +5,8 @@
   max-height: 86vh;
   overflow-y: auto;
   padding: 16px 20px calc(env(safe-area-inset-bottom) + 20px);
-  border-radius: 28px 28px 0 0;
-  background: #22332d;
+  border-radius: var(--owli-r-hoja) var(--owli-r-hoja) 0 0;
+  background: var(--owli-corteza-baja);
 }
 header {
   display: flex;

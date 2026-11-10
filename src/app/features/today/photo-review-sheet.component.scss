@@ -119,3 +119,9 @@
   font-style: normal;
   color: var(--owli-luna);
 }
+
+// Owli acompaña el aviso de "sin análisis": tranquilo, no es un error.
+.scene {
+  display: block;
+  margin: 4px auto 8px;
+}

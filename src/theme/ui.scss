@@ -5,7 +5,7 @@
    borde ámbar y, para lectores de pantalla, con aria-pressed. */
 .choice {
   border: 2px solid transparent;
-  border-radius: 14px;
+  border-radius: var(--owli-r-m);
   background: var(--owli-corteza);
   color: var(--owli-luna);
   font: inherit;
@@ -16,7 +16,7 @@
 
   &[aria-pressed='true'] {
     border-color: var(--owli-ojo);
-    background: #34331f;
+    background: var(--owli-ambar-velo);
   }
 }
 
@@ -27,7 +27,7 @@
   text-align: left;
   padding: 10px 12px;
   min-height: 64px;
-  border-radius: 16px;
+  border-radius: var(--owli-r-l);
 
   &.row {
     padding: 10px 16px;
@@ -85,7 +85,7 @@
 .bubble {
   margin: 0;
   background: var(--owli-corteza);
-  border-radius: 18px 18px 18px 6px;
+  border-radius: var(--owli-r-l) var(--owli-r-l) var(--owli-r-l) 6px;
   padding: 12px 16px;
   font-size: 17px;
   line-height: 1.4;
@@ -104,7 +104,7 @@
   height: 60px;
   margin-top: 12px;
   border: 0;
-  border-radius: 18px;
+  border-radius: var(--owli-r-xl);
   background: var(--owli-ojo);
   color: var(--owli-pino);
   font: inherit;
@@ -167,7 +167,7 @@
   display: flex;
   gap: 4px;
   padding: 4px;
-  border-radius: 12px;
+  border-radius: var(--owli-r-m);
   background: var(--owli-corteza);
 
   button {
@@ -175,7 +175,7 @@
     height: 36px;
     padding: 0 10px;
     border: 0;
-    border-radius: 8px;
+    border-radius: var(--owli-r-s);
     background: transparent;
     color: var(--owli-texto-terciario);
     font: inherit;
@@ -192,7 +192,7 @@
   width: 44px;
   height: 44px;
   border: 0;
-  border-radius: 12px;
+  border-radius: var(--owli-r-m);
   background: var(--owli-corteza);
   color: var(--owli-luna);
   display: flex;
@@ -271,10 +271,10 @@ label.cta:active {
   animation: owli-fade-in var(--owli-dur) var(--owli-ease) reverse forwards;
 }
 .sheet-in {
-  animation: owli-sheet-in 280ms var(--owli-ease);
+  animation: owli-sheet-in var(--owli-dur-entrada) var(--owli-ease);
 }
 .sheet-out {
-  animation: owli-sheet-out var(--owli-dur) cubic-bezier(0.4, 0, 1, 1) forwards;
+  animation: owli-sheet-out var(--owli-dur) var(--owli-ease-salida) forwards;
 }
 @keyframes owli-fade-in {
   from {

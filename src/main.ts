@@ -15,12 +15,14 @@ import { routes } from './app/app.routes';
 import { authInterceptor } from './app/core/auth/auth.interceptor';
 import { provideOwliI18n } from './app/core/i18n/transloco';
 import { ProfileSyncService } from './app/core/profile/profile-sync.service';
+import { owliPageTransition } from './app/shared/motion/page-transition';
 
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     // Owli es siempre oscuro y usa el estilo iOS en ambas plataformas para verse igual.
-    provideIonicAngular({ mode: 'ios' }),
+    // Las pantallas cambian con una transición propia (shared/motion/page-transition.ts).
+    provideIonicAngular({ mode: 'ios', navAnimation: owliPageTransition }),
     provideRouter(routes, withPreloading(PreloadAllModules), withComponentInputBinding()),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideOwliI18n(),

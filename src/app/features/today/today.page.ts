@@ -42,6 +42,8 @@ import { SuggestionsSheetComponent } from './suggestions-sheet.component';
 const CELEBRATE_MS = 2600;
 /** Lo que dura el brillo de una comida recién anotada (today.page.scss, .entry.fresh). */
 const FRESH_MS = 1600;
+/** Cuánto dura la entrada en cascada de la primera carga (6 filas × 40 ms + la animación). */
+const INTRO_MS = 700;
 
 /** Punto de la rama (misma curva que el SVG) para un avance t de 0 a 1. */
 function branchAt(t: number): { x: number; y: number } {
@@ -152,12 +154,21 @@ export class TodayPage implements ViewWillEnter {
   /** Comidas que aparecieron en esta visita (se resaltan un momento) y saltos de Owli. */
   protected readonly freshIds = signal<ReadonlySet<string>>(new Set());
   protected readonly hop = signal(0);
+  /** true durante la primera carga: las comidas entran en cascada (después, solo la nueva se resalta). */
+  protected readonly intro = signal(true);
+  /**
+   * La comida que la persona está borrando: solo esa sale animada. Al deshacer, el
+   * servidor le da otro id y la fila se reemplaza sin animar (si no, por un momento
+   * se verían dos iguales).
+   */
+  protected readonly removingId = signal<string | null>(null);
   /** Día cerrado recién ahora (no al abrir la app con el día ya cerrado). */
   protected readonly celebrating = signal(false);
   private seenIds: Set<string> | null = null;
   private lastMood: OwliMood | null = null;
   private celebrateTimer: ReturnType<typeof setTimeout> | undefined;
   private freshTimer: ReturnType<typeof setTimeout> | undefined;
+  private introTimer: ReturnType<typeof setTimeout> | undefined;
 
   constructor() {
     addIcons({ barChartOutline, personCircleOutline, searchOutline, closeOutline, cameraOutline, micOutline });
@@ -170,6 +181,7 @@ export class TodayPage implements ViewWillEnter {
       untracked(() => {
         if (this.seenIds === null) {
           this.seenIds = new Set(ids);
+          this.introTimer = setTimeout(() => this.intro.set(false), INTRO_MS);
           return;
         }
         const fresh = ids.filter((id) => !this.seenIds!.has(id));
@@ -196,7 +208,15 @@ export class TodayPage implements ViewWillEnter {
     inject(DestroyRef).onDestroy(() => {
       clearTimeout(this.celebrateTimer);
       clearTimeout(this.freshTimer);
+      clearTimeout(this.introTimer);
     });
+  }
+
+  protected removeEntry(id: string): void {
+    this.removingId.set(id);
+    // Al terminar, la marca se limpia: si se deshace, la comida vuelve con su id y
+    // después se reemplaza por la del servidor, y ese reemplazo no debe animarse.
+    void this.diary.remove(id).finally(() => this.removingId.set(null));
   }
 
   private celebrate(): void {

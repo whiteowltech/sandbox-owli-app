@@ -89,7 +89,7 @@
   padding: 0;
   border: 2px solid transparent;
   border-radius: 12px;
-  background: #22332d;
+  background: var(--owli-corteza-baja);
   color: var(--owli-luna);
   font: inherit;
   font-size: 13px;
@@ -114,7 +114,7 @@
 .detail {
   padding: 14px 16px;
   border-radius: 16px;
-  background: #22332d;
+  background: var(--owli-corteza-baja);
 
   p {
     margin: 0;
@@ -167,7 +167,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  border-top: 1.5px dashed #8a9a91;
+  border-top: 1.5px dashed var(--owli-texto-apagado);
   pointer-events: none;
 
   span {
@@ -229,7 +229,7 @@ table {
   border-collapse: collapse;
   border-radius: 12px;
   overflow: hidden;
-  background: #22332d;
+  background: var(--owli-corteza-baja);
   font-size: 15px;
 
   caption {
@@ -254,7 +254,7 @@ table {
     color: var(--owli-pluma);
   }
   tbody tr {
-    border-top: 1px solid #2e4139;
+    border-top: 1px solid var(--owli-linea);
   }
 }
 .note {

@@ -12,12 +12,12 @@
 }
 .date {
   margin: 0;
-  font-size: 15px;
+  font-size: var(--owli-t-cuerpo);
   color: var(--owli-pluma);
 }
 .hello {
   margin: 0;
-  font-size: 17px;
+  font-size: var(--owli-t-destacado);
   font-weight: 700;
 }
 .actions {
@@ -27,13 +27,13 @@
   a {
     width: 44px;
     height: 44px;
-    border-radius: 12px;
+    border-radius: var(--owli-r-m);
     background: var(--owli-corteza);
     color: var(--owli-luna);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    font-size: 22px; // tamaño del ícono
   }
 }
 .status {
@@ -41,24 +41,24 @@
 
   .label {
     margin: 0;
-    font-size: 15px;
+    font-size: var(--owli-t-cuerpo);
     color: var(--owli-pluma);
   }
   .of {
     margin: 2px 0 0;
-    font-size: 14px;
+    font-size: var(--owli-t-nota);
     color: var(--owli-texto-terciario);
   }
 }
 .big {
   margin: 0;
-  font-size: 44px;
+  font-size: var(--owli-t-display);
   line-height: 1.05;
   font-weight: 800;
   letter-spacing: -0.02em;
 
   span {
-    font-size: 18px;
+    font-size: var(--owli-t-destacado);
     font-weight: 500;
     color: var(--owli-pluma);
   }
@@ -83,7 +83,7 @@
 }
 .owli-says {
   margin: 6px 0 0;
-  font-size: 15px;
+  font-size: var(--owli-t-cuerpo);
   line-height: 1.4;
   color: var(--owli-pluma);
 }
@@ -96,7 +96,7 @@
   background: transparent;
   color: var(--owli-ojo);
   font: inherit;
-  font-size: 15px;
+  font-size: var(--owli-t-cuerpo);
   font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -108,7 +108,7 @@
   margin: 0;
 
   dt {
-    font-size: 14px;
+    font-size: var(--owli-t-nota);
     color: var(--owli-pluma);
   }
   dd {
@@ -117,7 +117,7 @@
     font-weight: 700;
   }
   .of-target {
-    font-size: 13px;
+    font-size: var(--owli-t-nota);
     font-weight: 500;
     color: var(--owli-texto-terciario);
   }
@@ -153,7 +153,7 @@
 
   h2 {
     margin: 0 0 8px;
-    font-size: 16px;
+    font-size: var(--owli-t-cuerpo);
     font-weight: 700;
     color: var(--owli-pluma);
   }
@@ -165,10 +165,10 @@
   gap: 8px;
   margin-bottom: 8px;
   padding: 8px 8px 8px 14px;
-  border-radius: 12px;
-  background: #3a3322;
+  border-radius: var(--owli-r-m);
+  background: var(--owli-ambar-aviso);
   color: var(--owli-ojo);
-  font-size: 14px;
+  font-size: var(--owli-t-cuerpo);
 
   button {
     height: 36px;
@@ -180,38 +180,51 @@
   }
 }
 .empty {
-  padding: 14px 16px;
-  border-radius: 14px;
-  background: #22332d;
+  padding: 4px 0;
   color: var(--owli-pluma);
-  font-size: 15px;
+  font-size: var(--owli-t-cuerpo);
+  line-height: 1.45;
 
   p {
     margin: 0;
   }
   .empty-title {
     color: var(--owli-luna);
-    font-size: 17px;
+    font-size: var(--owli-t-destacado);
     font-weight: 700;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
   }
 }
+// Las comidas del día son una sola lista (un bloque, filas con separador), no tarjetas sueltas.
 .entries {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  border-radius: var(--owli-r-l);
+  background: var(--owli-corteza-baja);
+  overflow: hidden;
+
+  &:empty {
+    display: none;
+  }
 }
 .entry {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
-  min-height: 56px;
-  padding: 0 4px 0 14px;
-  border-radius: 14px;
-  background: #22332d;
+  min-height: 60px;
+  padding: 0 4px 0 16px;
+  background: var(--owli-corteza-baja);
+
+  & + .entry::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 16px;
+    right: 0;
+    border-top: 1px solid var(--owli-linea);
+  }
 }
 .entry-main {
   flex-grow: 1;
@@ -222,19 +235,20 @@
   }
 }
 .entry-name {
-  font-size: 16px;
+  font-size: var(--owli-t-destacado);
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .entry-meta {
-  font-size: 13px;
+  font-size: var(--owli-t-nota);
   color: var(--owli-texto-terciario);
 }
 .entry-kcal {
-  font-size: 15px;
-  color: var(--owli-pluma);
+  font-size: var(--owli-t-cuerpo);
+  font-weight: 700;
+  color: var(--owli-luna);
 }
 .remove {
   width: 44px;
@@ -247,10 +261,10 @@
   align-items: center;
   justify-content: center;
 }
-.credits {
-  width: auto !important;
+.actions .credits {
+  width: auto;
   padding: 0 12px;
-  font-size: 14px;
+  font-size: var(--owli-t-cuerpo);
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap; // "16 análisis" en una línea
@@ -266,7 +280,7 @@
   height: 60px;
   flex-shrink: 0;
   border: 2px solid var(--owli-ojo);
-  border-radius: 20px;
+  border-radius: var(--owli-r-xl);
   background: transparent;
   color: var(--owli-ojo);
   font-size: 24px;
@@ -279,11 +293,11 @@
   cursor: pointer;
   height: 60px;
   border: 0;
-  border-radius: 20px;
+  border-radius: var(--owli-r-xl);
   background: var(--owli-ojo);
   color: var(--owli-pino);
   font: inherit;
-  font-size: 18px;
+  font-size: var(--owli-t-destacado);
   font-weight: 800;
   display: flex;
   align-items: center;
@@ -297,12 +311,29 @@
 
 // Comida recién anotada: un brillo ámbar que se apaga solo. Marca qué cambió.
 .entry.fresh {
-  animation: entry-fresh 1600ms ease-in;
+  animation:
+    entry-arrive var(--owli-dur-entrada) var(--owli-resorte),
+    entry-fresh 1600ms ease-in;
+}
+@keyframes entry-arrive {
+  from {
+    transform: scale(0.96);
+  }
 }
 @keyframes entry-fresh {
   from {
-    box-shadow: inset 0 0 0 2px var(--owli-ojo);
-    background: #34331f;
+    background: var(--owli-ambar-velo);
+  }
+}
+// Al abrir la pantalla las comidas entran en cascada (solo la primera carga).
+.entry.entry-in {
+  animation: entry-in var(--owli-dur-entrada) var(--owli-ease) backwards;
+  animation-delay: calc(min(var(--i, 0), 6) * 40ms);
+}
+@keyframes entry-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
 }
 .entry.entry-out {
@@ -324,9 +355,9 @@
   gap: 12px;
   margin-top: 12px;
   padding: 4px 4px 4px 16px;
-  border-radius: 14px;
+  border-radius: var(--owli-r-m);
   background: var(--owli-corteza-alta);
-  font-size: 15px;
+  font-size: var(--owli-t-cuerpo);
 
   span {
     min-width: 0;
@@ -367,22 +398,22 @@
   gap: 2px;
   padding: 10px 14px;
   border: 2px solid var(--owli-liquen);
-  border-radius: 16px 16px 16px 6px;
+  border-radius: var(--owli-r-l) var(--owli-r-l) var(--owli-r-l) 6px;
   background: var(--owli-corteza);
   color: var(--owli-luna);
   font: inherit;
   text-align: left;
 
   strong {
-    font-size: 17px;
+    font-size: var(--owli-t-destacado);
   }
   > span:last-child {
-    font-size: 14px;
+    font-size: var(--owli-t-nota);
     color: var(--owli-pluma);
   }
 }
 .celebrate-in {
-  animation: celebrate-in 320ms var(--owli-ease);
+  animation: celebrate-in var(--owli-dur-entrada) var(--owli-resorte);
 }
 @keyframes celebrate-in {
   from {

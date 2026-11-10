@@ -11,8 +11,17 @@
   flex-direction: column;
   gap: 6px;
   padding: 14px;
-  border-radius: 16px;
+  border-radius: var(--owli-r-l);
   background: var(--owli-pino);
+  // Entran en cascada al abrir la hoja (y los que se suman con "ver todos").
+  animation: dish-in var(--owli-dur-entrada) var(--owli-ease) backwards;
+  animation-delay: calc(min(var(--i, 0), 5) * 45ms + 60ms);
+}
+@keyframes dish-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 }
 .dish-head {
   display: flex;
@@ -22,20 +31,20 @@
 
   h3 {
     margin: 0;
-    font-size: 17px;
+    font-size: var(--owli-t-destacado);
     font-weight: 700;
   }
 }
 // Cierra lo que falta (±5 % kcal, ±5 g de proteína). Texto, no solo color.
 .exact {
   flex-shrink: 0;
-  font-size: 13px;
+  font-size: var(--owli-t-nota);
   font-weight: 700;
   color: var(--owli-liquen);
 }
 .side {
   flex-shrink: 0;
-  font-size: 13px;
+  font-size: var(--owli-t-nota);
   font-weight: 600;
   color: var(--owli-texto-terciario);
 }
@@ -44,7 +53,7 @@
 }
 .portions {
   margin: 0;
-  font-size: 15px;
+  font-size: var(--owli-t-cuerpo);
   line-height: 1.4;
   color: var(--owli-pluma);
 }
@@ -55,18 +64,18 @@
   gap: 12px;
 }
 .totals {
-  font-size: 14px;
+  font-size: var(--owli-t-nota);
   color: var(--owli-texto-terciario);
 }
 .log {
   height: 44px;
   padding: 0 18px;
   border: 2px solid var(--owli-ojo);
-  border-radius: 14px;
+  border-radius: var(--owli-r-m);
   background: transparent;
   color: var(--owli-ojo);
   font: inherit;
-  font-size: 15px;
+  font-size: var(--owli-t-cuerpo);
   font-weight: 700;
 
   &:disabled {
@@ -75,7 +84,7 @@
 }
 .empty-title {
   margin: 0;
-  font-size: 17px;
+  font-size: var(--owli-t-destacado);
   font-weight: 700;
 }
 .skeletons {

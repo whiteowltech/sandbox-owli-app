@@ -69,6 +69,7 @@
       <owli-owl
         class="walker"
         [mood]="mood()"
+        [scene]="celebrating() ? 'closed' : null"
         [size]="96"
         [decorative]="true"
         [hop]="hop()"
@@ -116,8 +117,14 @@
       </div>
       }
       <ul class="entries">
-        @for (e of diary.entries(); track e.id) {
-        <li class="entry" [class.fresh]="freshIds().has(e.id)" animate.leave="entry-out">
+        @for (e of diary.entries(); track e.id; let i = $index) {
+        <li
+          class="entry"
+          [class.entry-in]="intro()"
+          [style.--i]="i"
+          [class.fresh]="freshIds().has(e.id)"
+          [animate.leave]="removingId() === e.id ? 'entry-out' : ''"
+        >
           <div class="entry-main">
             <p class="entry-name">{{ entryName(e) }}</p>
             <p class="entry-meta num">{{ e.grams }} g · {{ time(e) }}</p>
@@ -127,7 +134,7 @@
             type="button"
             class="remove"
             [attr.aria-label]="'today.remove' | transloco: { name: entryName(e) }"
-            (click)="diary.remove(e.id)"
+            (click)="removeEntry(e.id)"
           >
             <ion-icon name="close-outline" aria-hidden="true" />
           </button>

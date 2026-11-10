@@ -19,14 +19,41 @@
   --owli-luna: #eee8da; // texto principal
   --owli-luna-azul: #9db4d9; // grasa
   --owli-texto-terciario: #a9b5ad;
+  --owli-texto-apagado: #8a9a91; // placeholders, líneas de referencia
+  --owli-hoja-oscura: #6e9c87; // la segunda hoja de la rama
 
-  // Tipografía
+  // Superficies derivadas (ver DESIGN.md: profundidad por tono, no por sombra)
+  --owli-corteza-baja: #22332d; // listas y bloques dentro de la pantalla
+  --owli-linea: #2e4139; // separador entre filas de una lista
+  --owli-ambar-velo: #34331f; // fondo de lo seleccionado o recién anotado
+  --owli-ambar-aviso: #3a3322; // fondo de un aviso
+  --owli-brasa: #b5503c; // acción destructiva (borrar la cuenta)
+  --owli-brasa-borde: #d98c7a;
+  --owli-brasa-texto: #f0a898;
+
+  // Tipografía: una sola familia; la jerarquía sale del tamaño y el peso.
   --owli-font: 'Atkinson Hyperlegible Next', system-ui, sans-serif;
+  --owli-t-display: 44px; // el número del día
+  --owli-t-titulo: 22px; // título de pantalla
+  --owli-t-destacado: 17px; // nombre de algo, texto principal de Owli
+  --owli-t-cuerpo: 15px; // texto secundario
+  --owli-t-nota: 13px; // metadatos (gramos, hora)
+
+  // Radios por jerarquía: cuanto más grande el contenedor, más redondeado.
+  --owli-r-s: 8px; // dentro de otro control (segmento activo)
+  --owli-r-m: 12px; // botones de ícono, avisos, campos
+  --owli-r-l: 16px; // listas y bloques
+  --owli-r-xl: 20px; // acción principal
+  --owli-r-hoja: 24px; // borde superior de las hojas
 
   // Movimiento: rápido, nunca lento (regla de CLAUDE.md)
   --owli-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --owli-ease-salida: cubic-bezier(0.4, 0, 1, 1); // lo que se va acelera
+  // Resorte con un rebote chico: solo para lo que "llega" (festejo, comida nueva).
+  --owli-resorte: linear(0, 0.22 8%, 0.6 18%, 0.9 30%, 1.04 42%, 1.06 50%, 1.03 62%, 1 76%, 0.995 88%, 1);
   --owli-dur-rapida: 150ms;
   --owli-dur: 220ms;
+  --owli-dur-entrada: 320ms; // pantallas y hojas que entran
 
   // Ionic
   --ion-font-family: var(--owli-font);
