@@ -51,7 +51,14 @@ const SEARCH_DEBOUNCE_MS = 250;
           @for (f of results(); track f.id) {
             <li>
               <button type="button" class="result" (click)="pick(f)">
-                <span class="name">{{ name(f) }}</span>
+                <span class="name">
+                  {{ name(f) }}
+                  @if (f.recipe) {
+                    <span class="own">{{ 'today.add.ownRecipe' | transloco }}</span>
+                  } @else if (f.estimated) {
+                    <span class="own">{{ 'today.add.ownEstimate' | transloco }}</span>
+                  }
+                </span>
                 <span class="per num">{{ 'today.add.per100' | transloco: { kcal: round(f.per100g.kcal) } }}</span>
               </button>
             </li>

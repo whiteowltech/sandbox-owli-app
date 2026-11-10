@@ -30,6 +30,9 @@ export interface Food {
   traits: FoodTraits;
   /** Los valores los estimó la IA: no está en la base (es un alimento propio del usuario). */
   estimated?: boolean;
+  /** Receta propia del usuario; servingGrams es el peso de una porción, si se sabe. */
+  recipe?: boolean;
+  servingGrams?: number;
 }
 
 export interface Entry {

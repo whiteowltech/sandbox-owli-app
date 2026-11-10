@@ -145,3 +145,33 @@
     text-underline-offset: 2px;
   }
 }
+
+// Receta: cuánto se comió, antes de los ingredientes.
+.recipe {
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border-radius: var(--owli-r-l);
+  background: var(--owli-corteza-baja);
+
+  .recipe-name {
+    margin: 0;
+    font-size: var(--owli-t-destacado);
+    font-weight: 700;
+  }
+  .hint {
+    margin: 2px 0 10px;
+  }
+  .hint:last-child {
+    margin: 10px 0 0;
+  }
+  .seg button {
+    flex: 1;
+  }
+}
+// Las unidades mandan ("2 huevos"); los gramos, chicos al lado.
+.unit-grams {
+  margin-left: 4px;
+  font-size: var(--owli-t-nota);
+  font-weight: 400;
+  color: var(--owli-texto-terciario);
+}

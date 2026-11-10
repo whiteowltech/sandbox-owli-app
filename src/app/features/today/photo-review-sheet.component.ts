@@ -45,6 +45,22 @@ export class PhotoReviewSheetComponent {
   protected readonly results = signal<Food[]>([]);
 
   protected readonly leftAfter = computed(() => Math.round(this.leftKcal() - this.analysis.draftKcal()));
+  /** Cuánto se comió de una receta que no dice cuántas porciones rinde. */
+  protected readonly portionOptions = [
+    { key: 'all', value: 1 },
+    { key: 'threeQuarters', value: 0.75 },
+    { key: 'half', value: 0.5 },
+    { key: 'quarter', value: 0.25 },
+  ] as const;
+  /** Calorías de toda la receta (todos sus ingredientes). */
+  protected readonly recipeKcal = computed(() =>
+    this.analysis.savable().reduce((sum, d) => sum + ((d.food?.per100g.kcal ?? 0) * d.grams) / 100, 0),
+  );
+  /** Porciones comidas de una receta que rinde varias. */
+  protected readonly servingsEaten = computed(() => {
+    const servings = this.analysis.recipe()?.servings ?? 0;
+    return servings >= 2 ? Math.max(1, Math.round(this.analysis.portion() * servings)) : 1;
+  });
   protected readonly unresolved = computed(() => this.analysis.kept().filter((d) => !d.food).length);
 
   /** Clave de i18n según el origen: today.voice.* o today.photo.* */
@@ -63,6 +79,16 @@ export class PhotoReviewSheetComponent {
 
   protected round(n: number): number {
     return Math.round(n);
+  }
+
+  /** "2", "1,5": las unidades con un decimal como mucho, en el idioma de la app. */
+  protected qty(n: number): string {
+    return new Intl.NumberFormat(this.lang(), { maximumFractionDigits: 1 }).format(n);
+  }
+
+  protected eatServings(n: number): void {
+    const servings = this.analysis.recipe()?.servings ?? 0;
+    if (servings >= 2) this.analysis.setPortion(Math.min(servings, Math.max(1, n)) / servings);
   }
 
   protected kcal(d: DraftItem): number {

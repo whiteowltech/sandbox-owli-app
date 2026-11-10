@@ -237,7 +237,9 @@
         "vegetarian": "Tiene carne o pescado: no entra en la dieta vegetariana.",
         "pescetarian": "Tiene carne: no entra en la dieta pescetariana.",
         "paleo": "No entra en la dieta paleo (cereal, legumbre, lácteo o azúcar)."
-      }
+      },
+      "ownRecipe": "Tu receta",
+      "ownEstimate": "Tuyo · IA"
     },
     "mood": {
       "neutral": "El día sigue en marcha.",
@@ -331,6 +333,23 @@
     "celebrate": {
       "title": "¡Día cerrado!",
       "body": "Calorías y proteína en su lugar."
+    },
+    "recipe": {
+      "title": "Receta: {{name}}",
+      "yields": "En total: {{kcal}} kcal.",
+      "yieldsServings": "Rinde {{n}} porciones · {{kcal}} kcal en total.",
+      "howMuch": "¿Cuánto comiste?",
+      "servingsOf": "{{n}} de {{total}} porciones",
+      "lessServing": "Una porción menos",
+      "moreServing": "Una porción más",
+      "part": {
+        "all": "Todo",
+        "threeQuarters": "¾",
+        "half": "La mitad",
+        "quarter": "¼"
+      },
+      "ingredients": "Ingredientes de toda la receta. Queda guardada como plato tuyo: la próxima vez dime solo su nombre.",
+      "save": "Guardar receta y anotar"
     }
   },
   "week": {

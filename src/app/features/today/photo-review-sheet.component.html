@@ -91,6 +91,57 @@
       }
 
       @if (picking() === null) {
+        @if (analysis.recipe(); as r) {
+          <!-- Una receta: se guarda como plato propio y se anota solo lo que comiste. -->
+          <section class="recipe" aria-labelledby="recipe-title">
+            <p id="recipe-title" class="recipe-name">{{ 'today.recipe.title' | transloco: { name: r.name } }}</p>
+            <p class="hint num">
+              {{
+                (r.servings >= 2 ? 'today.recipe.yieldsServings' : 'today.recipe.yields')
+                  | transloco: { n: r.servings, kcal: round(recipeKcal()) }
+              }}
+            </p>
+            <p class="field-label">{{ 'today.recipe.howMuch' | transloco }}</p>
+            @if (r.servings >= 2) {
+              <div class="grams small">
+                <button
+                  type="button"
+                  class="step"
+                  [attr.aria-label]="'today.recipe.lessServing' | transloco"
+                  [disabled]="servingsEaten() <= 1"
+                  (click)="eatServings(servingsEaten() - 1)"
+                >
+                  −
+                </button>
+                <span class="num value">
+                  {{ 'today.recipe.servingsOf' | transloco: { n: servingsEaten(), total: r.servings } }}
+                </span>
+                <button
+                  type="button"
+                  class="step"
+                  [attr.aria-label]="'today.recipe.moreServing' | transloco"
+                  [disabled]="servingsEaten() >= r.servings"
+                  (click)="eatServings(servingsEaten() + 1)"
+                >
+                  +
+                </button>
+              </div>
+            } @else {
+              <div class="seg" role="group" [attr.aria-label]="'today.recipe.howMuch' | transloco">
+                @for (p of portionOptions; track p.key) {
+                  <button
+                    type="button"
+                    [attr.aria-pressed]="analysis.portion() === p.value"
+                    (click)="analysis.setPortion(p.value)"
+                  >
+                    {{ 'today.recipe.part.' + p.key | transloco }}
+                  </button>
+                }
+              </div>
+            }
+            <p class="hint">{{ 'today.recipe.ingredients' | transloco }}</p>
+          </section>
+        }
         <ul class="results">
           @for (d of analysis.draft(); track d.key) {
             <li class="review-item" [class.attention]="d.needsReview && !d.removed">
@@ -133,16 +184,23 @@
                       type="button"
                       class="step"
                       [attr.aria-label]="'today.photo.less' | transloco: { name: name(d) }"
-                      (click)="analysis.nudge(d.key, 0.9)"
+                      (click)="analysis.nudge(d.key, false)"
                     >
                       −
                     </button>
-                    <span class="num value">{{ d.grams }} g</span>
+                    <span class="num value">
+                      @if (d.quantity > 0) {
+                        {{ qty(d.quantity) }} {{ d.quantity === 1 ? d.unitOne : d.unitMany }}
+                        <span class="unit-grams">{{ d.grams }} g</span>
+                      } @else {
+                        {{ d.grams }} g
+                      }
+                    </span>
                     <button
                       type="button"
                       class="step"
                       [attr.aria-label]="'today.photo.more' | transloco: { name: name(d) }"
-                      (click)="analysis.nudge(d.key, 1.1)"
+                      (click)="analysis.nudge(d.key, true)"
                     >
                       +
                     </button>
@@ -171,8 +229,12 @@
           (click)="save()"
         >
           {{
-            (analysis.phase() === 'saving' ? 'today.add.saving' : 'today.photo.save')
-              | transloco: { n: analysis.savable().length }
+            (analysis.phase() === 'saving'
+              ? 'today.add.saving'
+              : analysis.recipe()
+                ? 'today.recipe.save'
+                : 'today.photo.save'
+            ) | transloco: { n: analysis.savable().length }
           }}
         </button>
         <p class="hint center">{{ k('discarded') | transloco }}</p>

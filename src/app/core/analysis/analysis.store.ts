@@ -31,11 +31,24 @@ interface AnalysisItemDto {
   confidence: number;
   needsReview: boolean;
   food: Food | null;
+  /** Unidades ("2 huevos"): sin quantity, solo gramos. grams = quantity × unitGrams. */
+  quantity?: number;
+  unitOne?: string;
+  unitMany?: string;
+  unitGrams?: number;
+}
+
+/** Lo analizado es una receta: los ítems son sus ingredientes con toda la cantidad. */
+export interface RecipeInfo {
+  name: string;
+  /** Porciones que rinde; 0 = no se sabe. */
+  servings: number;
 }
 
 interface AnalysisDto {
   id: string;
   items: AnalysisItemDto[];
+  recipe?: RecipeInfo;
   /** Solo en voz: lo que se entendió del audio. */
   transcript?: string;
   noFood: boolean;
@@ -53,6 +66,11 @@ export interface DraftItem {
   removed: boolean;
   /** Ya guardado: si falla un ítem posterior, el reintento no lo duplica. */
   saved: boolean;
+  /** Unidades: cuántas y cuánto pesa una (0 = se cuenta en gramos). */
+  quantity: number;
+  unitOne: string;
+  unitMany: string;
+  unitGrams: number;
 }
 
 /**
@@ -71,6 +89,10 @@ interface AnalysisState {
   /** De dónde sale el borrador: define los textos y el origen con que se guarda. */
   kind: InputKind;
   draft: DraftItem[];
+  /** Si lo analizado es una receta: se guarda como plato propio y se anota la parte comida. */
+  recipe: RecipeInfo | null;
+  /** Parte de la receta que se comió (0 a 1]. */
+  portion: number;
   wallet: Wallet | null;
   /** Para reintentar sin volver a sacar la foto ni grabar: la foto, el audio o el texto dictado. */
   lastInput: Blob | string | null;
@@ -82,12 +104,19 @@ interface AnalysisState {
   capture: 'device' | 'audio';
 }
 
-const CLEARED: Pick<AnalysisState, 'phase' | 'draft' | 'lastInput' | 'transcript'> = {
+const CLEARED: Pick<AnalysisState, 'phase' | 'draft' | 'lastInput' | 'transcript' | 'recipe' | 'portion'> = {
   phase: 'idle',
   draft: [],
   lastInput: null,
   transcript: '',
+  recipe: null,
+  portion: 1,
 };
+
+/** Porción inicial de una receta: una porción si se sabe cuántas rinde; si no, toda. */
+export function initialPortion(recipe: RecipeInfo | null | undefined): number {
+  return recipe && recipe.servings >= 2 ? 1 / recipe.servings : 1;
+}
 
 /** Idioma del reconocedor: el del teléfono si coincide con el de la app (es-AR, es-MX…). */
 function speechLang(appLang: string): string {
@@ -104,16 +133,24 @@ function capitalize(s: string): string {
 export const AnalysisStore = signalStore(
   { providedIn: 'root' },
   withState<AnalysisState>({ ...CLEARED, kind: 'photo', wallet: null, capture: 'device' }),
-  withComputed(({ draft }) => ({
-    kept: computed(() => draft().filter((d) => !d.removed)),
-    /** Lo que se guardaría: solo los ítems con alimento elegido. */
-    savable: computed(() => draft().filter((d) => !d.removed && !d.saved && d.food)),
-    draftKcal: computed(() =>
-      draft()
-        .filter((d) => !d.removed && d.food)
-        .reduce((sum, d) => sum + ((d.food?.per100g.kcal ?? 0) * d.grams) / 100, 0),
-    ),
-  })),
+  withComputed(({ draft, recipe, portion }) => {
+    const savable = computed(() => draft().filter((d) => !d.removed && !d.saved && d.food));
+    /** Peso de toda la receta: la suma de los ingredientes que se guardan. */
+    const recipeGrams = computed(() => savable().reduce((sum, d) => sum + d.grams, 0));
+    return {
+      kept: computed(() => draft().filter((d) => !d.removed)),
+      /** Lo que se guardaría: solo los ítems con alimento elegido. */
+      savable,
+      recipeGrams,
+      /** Calorías que se anotan: en una receta, solo la parte comida. */
+      draftKcal: computed(() => {
+        const all = draft()
+          .filter((d) => !d.removed && d.food)
+          .reduce((sum, d) => sum + ((d.food?.per100g.kcal ?? 0) * d.grams) / 100, 0);
+        return recipe() ? all * portion() : all;
+      }),
+    };
+  }),
   withMethods(
     (
       store,
@@ -155,6 +192,8 @@ export const AnalysisStore = signalStore(
             wallet: res.credits,
             transcript: res.transcript ?? '',
             phase: res.noFood ? 'noFood' : 'review',
+            recipe: res.recipe ?? null,
+            portion: initialPortion(res.recipe),
             draft: res.items.map((it, i) => ({
               key: i,
               displayName: capitalize(it.displayName || it.name),
@@ -163,6 +202,10 @@ export const AnalysisStore = signalStore(
               needsReview: it.needsReview,
               removed: false,
               saved: false,
+              quantity: it.quantity ?? 0,
+              unitOne: it.unitOne ?? '',
+              unitMany: it.unitMany ?? it.unitOne ?? '',
+              unitGrams: it.unitGrams ?? 0,
             })),
           });
         } catch (err) {
@@ -270,10 +313,27 @@ export const AnalysisStore = signalStore(
           await run('voice', audio);
         },
 
-        /** Ajuste rápido: ±10 % (el error típico de la IA es ±20–25 %). */
-        nudge(key: number, factor: number): void {
+        /**
+         * Ajuste rápido: de a una unidad si se cuenta en unidades ("2 huevos" → 3), o
+         * ±10 % de los gramos (el error típico de la IA es ±20–25 %). up = más.
+         */
+        nudge(key: number, up: boolean): void {
           const item = store.draft().find((d) => d.key === key);
-          if (item) patchItem(key, { grams: Math.min(3000, Math.max(5, Math.round((item.grams * factor) / 5) * 5)) });
+          if (!item) return;
+          if (item.quantity > 0 && item.unitGrams > 0) {
+            // De a una; por debajo de una unidad, de a media ("media cucharada").
+            const step = item.quantity > 1 || (up && item.quantity === 1) ? 1 : 0.5;
+            const quantity = Math.min(200, Math.max(0.5, item.quantity + (up ? step : -step)));
+            const grams = Math.min(3000, Math.max(1, Math.round(quantity * item.unitGrams)));
+            patchItem(key, { quantity, grams });
+            return;
+          }
+          const factor = up ? 1.1 : 0.9;
+          patchItem(key, { grams: Math.min(3000, Math.max(5, Math.round((item.grams * factor) / 5) * 5)) });
+        },
+        /** Cuánto se comió de la receta (parte de toda). */
+        setPortion(portion: number): void {
+          patchState(store, { portion: Math.min(1, Math.max(0.01, portion)) });
         },
         setFood(key: number, food: Food): void {
           patchItem(key, { food, needsReview: false });
@@ -285,11 +345,29 @@ export const AnalysisStore = signalStore(
           patchItem(key, { removed: false });
         },
 
-        /** Guarda los ítems confirmados con su origen ("photo" o "voice"). */
+        /**
+         * Guarda los ítems confirmados con su origen ("photo" o "voice"). Una receta se
+         * guarda como plato propio (con sus ingredientes) y se anota solo la parte comida.
+         */
         async save(): Promise<boolean> {
           const items = store.savable();
           patchState(store, { phase: 'saving' });
           try {
+            const recipe = store.recipe();
+            if (recipe) {
+              await firstValueFrom(
+                http.post(`${api}/v1/me/recipes`, {
+                  name: recipe.name,
+                  servings: recipe.servings,
+                  ingredients: items.map((it) => ({ foodId: it.food!.id, grams: it.grams })),
+                  eatenGrams: Math.max(1, Math.round(store.recipeGrams() * store.portion())),
+                  source: store.kind(),
+                }),
+              );
+              await diary.load();
+              patchState(store, CLEARED);
+              return true;
+            }
             for (const it of items) {
               await firstValueFrom(
                 http.post(`${api}/v1/me/entries`, { foodId: it.food!.id, grams: it.grams, source: store.kind() }),

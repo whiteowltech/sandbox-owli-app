@@ -161,9 +161,9 @@ describe('AnalysisStore', () => {
 
   it('ajustar gramos, elegir el alimento que faltaba y quitar', async () => {
     const { store } = await analyzed();
-    store.nudge(0, 1.1);
+    store.nudge(0, true);
     expect(store.draft()[0].grams).toBe(165);
-    store.nudge(0, 0.9);
+    store.nudge(0, false);
     expect(store.draft()[0].grams).toBe(150);
     store.setFood(2, chicken);
     expect(store.draft()[2].needsReview).toBe(false);
@@ -382,5 +382,114 @@ describe('AnalysisStore', () => {
       patchState(store as never, { wallet: { ...wallet, voice: { transcript: true, audio: true } } });
       expect(store.voiceAvailable()).toBe(true);
     });
+  });
+});
+
+describe('AnalysisStore: unidades y recetas', () => {
+  afterEach(() => TestBed.inject(HttpTestingController).verify());
+
+  const egg: Food = { ...chicken, id: 'huevo', nameEs: 'Huevo entero', per100g: { ...chicken.per100g, kcal: 143 } };
+  const milk: Food = {
+    ...chicken,
+    id: 'leche-entera',
+    nameEs: 'Leche entera',
+    per100g: { ...chicken.per100g, kcal: 61 },
+  };
+
+  async function waffles(servings: number) {
+    const ctx = setup();
+    const done = ctx.store.analyze(new Blob(['waffles'], { type: 'image/jpeg' }));
+    await tick();
+    await tick();
+    ctx.backend.expectOne({ method: 'POST', url: `${API}/v1/me/analyses/photo` }).flush({
+      id: 'a2',
+      noFood: false,
+      fallback: false,
+      credits: wallet,
+      recipe: { name: 'Waffles proteicos', servings },
+      items: [
+        {
+          name: 'whole egg',
+          displayName: 'Huevo entero',
+          grams: 100,
+          confidence: 0.9,
+          needsReview: false,
+          food: egg,
+          quantity: 2,
+          unitOne: 'huevo',
+          unitMany: 'huevos',
+          unitGrams: 50,
+        },
+        {
+          name: 'whole milk',
+          displayName: 'Leche entera',
+          grams: 200,
+          confidence: 0.8,
+          needsReview: false,
+          food: milk,
+          quantity: 1,
+          unitOne: 'vaso',
+          unitMany: 'vasos',
+          unitGrams: 200,
+        },
+      ],
+    });
+    await done;
+    return ctx;
+  }
+
+  it('cuenta en unidades: los botones suman o restan de a una', async () => {
+    const { store } = await waffles(4);
+    const eggs = () => store.draft()[0];
+    expect(eggs().quantity).toBe(2);
+    store.nudge(0, true);
+    expect([eggs().quantity, eggs().grams]).toEqual([3, 150]);
+    store.nudge(0, false);
+    store.nudge(0, false);
+    expect([eggs().quantity, eggs().grams]).toEqual([1, 50]);
+    // Por debajo de una unidad, de a media; nunca cero.
+    store.nudge(0, false);
+    store.nudge(0, false);
+    expect([eggs().quantity, eggs().grams]).toEqual([0.5, 25]);
+  });
+
+  it('una receta que rinde 4 empieza en una porción y anota solo eso', async () => {
+    const { store, backend } = await waffles(4);
+    // Toda la receta: 143 + 122 = 265 kcal; una porción = 66,25.
+    expect(store.recipe()?.name).toBe('Waffles proteicos');
+    expect(store.portion()).toBe(0.25);
+    expect(Math.round(store.draftKcal())).toBe(66);
+
+    store.setPortion(0.5);
+    const saving = store.save();
+    await tick();
+    const req = backend.expectOne({ method: 'POST', url: `${API}/v1/me/recipes` });
+    expect(req.request.body).toEqual({
+      name: 'Waffles proteicos',
+      servings: 4,
+      ingredients: [
+        { foodId: 'huevo', grams: 100 },
+        { foodId: 'leche-entera', grams: 200 },
+      ],
+      eatenGrams: 150,
+      source: 'photo',
+    });
+    req.flush({});
+    await tick();
+    backend.expectOne(`${API}/v1/me/day`).flush({
+      date: '2026-11-09',
+      entries: [],
+      totals: { kcal: 0, proteinG: 0, carbsG: 0, fiberG: 0, fatG: 0 },
+      plan: { dailyTarget: 2161, tdee: 2711 },
+      targets: { proteinG: 160, carbsG: 245, fatG: 60, netCarbs: false },
+      mood: 'neutral',
+    });
+    expect(await saving).toBe(true);
+    expect(store.recipe()).toBeNull();
+  });
+
+  it('sin porciones conocidas, empieza en "todo"', async () => {
+    const { store } = await waffles(0);
+    expect(store.portion()).toBe(1);
   });
 });

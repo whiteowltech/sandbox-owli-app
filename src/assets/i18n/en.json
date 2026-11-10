@@ -237,7 +237,9 @@
         "vegetarian": "Has meat or fish: outside the vegetarian diet.",
         "pescetarian": "Has meat: outside the pescatarian diet.",
         "paleo": "Outside the paleo diet (grain, legume, dairy or sugar)."
-      }
+      },
+      "ownRecipe": "Your recipe",
+      "ownEstimate": "Yours · AI"
     },
     "mood": {
       "neutral": "The day is under way.",
@@ -331,6 +333,23 @@
     "celebrate": {
       "title": "Day closed!",
       "body": "Calories and protein on target."
+    },
+    "recipe": {
+      "title": "Recipe: {{name}}",
+      "yields": "In total: {{kcal}} kcal.",
+      "yieldsServings": "Makes {{n}} servings · {{kcal}} kcal in total.",
+      "howMuch": "How much did you eat?",
+      "servingsOf": "{{n}} of {{total}} servings",
+      "lessServing": "One serving less",
+      "moreServing": "One serving more",
+      "part": {
+        "all": "All",
+        "threeQuarters": "¾",
+        "half": "Half",
+        "quarter": "¼"
+      },
+      "ingredients": "Ingredients for the whole recipe. It is saved as your own dish: next time just tell me its name.",
+      "save": "Save recipe and log"
     }
   },
   "week": {

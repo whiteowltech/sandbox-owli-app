@@ -166,3 +166,11 @@ h2 {
     opacity: 0.6;
   }
 }
+
+// Tus platos (recetas y lo que estimó la IA) aparecen primero y se marcan.
+.own {
+  margin-left: 6px;
+  font-size: var(--owli-t-nota);
+  font-weight: 400;
+  color: var(--owli-liquen);
+}
