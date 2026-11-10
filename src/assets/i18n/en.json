@@ -272,7 +272,7 @@
       "removed": "You removed {{name}}.",
       "undo": "Undo",
       "remove": "Remove {{name}}",
-      "notFound": "Not in our database yet: pick a similar one or remove it.",
+      "notFound": "I couldn't estimate it: pick a similar one or remove it.",
       "pickFood": "Choose the food",
       "check": "Check this one: I’m not sure.",
       "less": "Less {{name}}",
@@ -281,7 +281,9 @@
       "overAfter": "If you save it, you go {{kcal}} kcal over.",
       "unresolved": "{{n}} without a food chosen: it won’t be saved.",
       "save": "Save ({{n}})",
-      "discarded": "The photo isn’t stored: it’s discarded after the analysis."
+      "discarded": "The photo isn’t stored: it’s discarded after the analysis.",
+      "estimated": "Estimated by AI.",
+      "swapFood": "Swap for one from the database"
     },
     "voice": {
       "recordingTitle": "Listening…",

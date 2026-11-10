@@ -292,6 +292,7 @@
   flex-grow: 1;
   cursor: pointer;
   height: 60px;
+  margin-top: 0; // el .cta global trae 12 px arriba y la desalineaba de los otros dos botones
   border: 0;
   border-radius: var(--owli-r-xl);
   background: var(--owli-ojo);

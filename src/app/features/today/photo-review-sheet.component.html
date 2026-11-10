@@ -120,6 +120,14 @@
                   @if (d.needsReview) {
                     <p class="warn">{{ 'today.photo.check' | transloco }}</p>
                   }
+                  @if (d.food.estimated) {
+                    <p class="estimated">
+                      {{ 'today.photo.estimated' | transloco }}
+                      <button type="button" class="swap" (click)="startPick(d)">
+                        {{ 'today.photo.swapFood' | transloco }}
+                      </button>
+                    </p>
+                  }
                   <div class="grams small">
                     <button
                       type="button"

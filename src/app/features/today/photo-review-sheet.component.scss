@@ -125,3 +125,23 @@
   display: block;
   margin: 4px auto 8px;
 }
+
+// Alimento que no está en la base: los valores los estimó la IA. Se dice, sin alarma,
+// y se puede cambiar por uno de la base.
+.estimated {
+  margin: 2px 0 6px;
+  font-size: var(--owli-t-nota);
+  color: var(--owli-texto-terciario);
+
+  .swap {
+    min-height: 32px;
+    margin-left: 4px;
+    padding: 0 4px;
+    border: 0;
+    background: transparent;
+    color: var(--owli-pluma);
+    font: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+}

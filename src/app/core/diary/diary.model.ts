@@ -28,6 +28,8 @@ export interface Food {
   nameEn: string;
   per100g: MacrosDto;
   traits: FoodTraits;
+  /** Los valores los estimó la IA: no está en la base (es un alimento propio del usuario). */
+  estimated?: boolean;
 }
 
 export interface Entry {

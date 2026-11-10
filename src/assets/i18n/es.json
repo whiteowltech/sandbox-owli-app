@@ -272,7 +272,7 @@
       "removed": "Quitaste {{name}}.",
       "undo": "Deshacer",
       "remove": "Quitar {{name}}",
-      "notFound": "Todavía no está en la base: elige uno parecido o quítalo.",
+      "notFound": "No pude estimarlo: elige uno parecido o quítalo.",
       "pickFood": "Elegir el alimento",
       "check": "Revisa este: no estoy seguro.",
       "less": "Menos {{name}}",
@@ -281,7 +281,9 @@
       "overAfter": "Si lo guardas, te pasas {{kcal}} kcal.",
       "unresolved": "{{n}} sin alimento elegido: no se guardará.",
       "save": "Guardar ({{n}})",
-      "discarded": "La foto no se guarda: se descarta después del análisis."
+      "discarded": "La foto no se guarda: se descarta después del análisis.",
+      "estimated": "Estimado por IA.",
+      "swapFood": "Cambiar por uno de la base"
     },
     "voice": {
       "recordingTitle": "Te escucho…",
